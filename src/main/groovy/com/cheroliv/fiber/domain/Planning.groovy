@@ -12,7 +12,7 @@ import java.time.ZonedDateTime
 @ToString
 @Entity
 @Table(name = "`planning`",indexes = [
-        @Index(name = "`idx_planning_tech_initial`", columnList = "`tech_initial`"),
+        @Index(name = "`idx_planning_initial_tech`", columnList = "`initial_tech`"),
         @Index(name = "`idx_planning_open`", columnList = "`open`"),
         @Index(name = "`idx_planning_date_creation`", columnList = "`date_creation`"),
         @Index(name = "`idx_planning_last_name_tech`", columnList = "`last_name_tech`"),
@@ -24,8 +24,8 @@ class Planning implements Serializable {
     Long id
     @NotNull
     @Size(min = 4)
-    @Column(name="`tech_initial`",nullable = false)
-    String techInitial
+    @Column(name="`initial_tech`",nullable = false)
+    String initialTech
     @NotNull
     @Column(name="`open`",nullable = false)
     Boolean open
@@ -54,14 +54,14 @@ class Planning implements Serializable {
         if (firstNameTech != planning.firstNameTech) return false
         if (lastNameTech != planning.lastNameTech) return false
         if (open != planning.open) return false
-        if (techInitial != planning.techInitial) return false
+        if (initialTech != planning.initialTech) return false
 
         return true
     }
 
     int hashCode() {
         int result
-        result = (techInitial != null ? techInitial.hashCode() : 0)
+        result = (initialTech != null ? initialTech.hashCode() : 0)
         result = 31 * result + (open != null ? open.hashCode() : 0)
         result = 31 * result + (dateCreation != null ? dateCreation.hashCode() : 0)
         result = 31 * result + (lastNameTech != null ? lastNameTech.hashCode() : 0)
