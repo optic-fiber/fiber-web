@@ -1,2 +1,2 @@
-# fiber-rest
-fiber rest service
+# fiber-web
+fiber web application
