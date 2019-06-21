@@ -21,7 +21,7 @@ import java.time.ZonedDateTime
         @Index(name = "`idx_inter_first_name_client`", columnList = "`first_name_client`"),
         @Index(name = "`idx_inter_last_name_client`", columnList = "`last_name_client`")])
 class Inter implements Serializable, InterConstants {
-
+    static final long serialVersionUID = 1L
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE,
             generator = "sequenceGenerator")

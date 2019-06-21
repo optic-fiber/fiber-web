@@ -27,6 +27,7 @@ import java.time.Instant
         @Index(name = "`idx_user_lang_key`", columnList = "`lang_key`"),
         @Index(name = "`idx_user_image_url`", columnList = "`image_url`")])
 class User implements Serializable {
+    static final long serialVersionUID = 1L
     static final String LOGIN_REGEX = '^[_.@A-Za-z0-9-]*$'
 
     static final String SYSTEM_ACCOUNT = "system"

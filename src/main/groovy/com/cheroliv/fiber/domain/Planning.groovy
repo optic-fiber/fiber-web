@@ -18,7 +18,7 @@ import java.time.ZonedDateTime
         @Index(name = "`idx_planning_last_name_tech`", columnList = "`last_name_tech`"),
         @Index(name = "`idx_planning_first_name_tech`", columnList = "`first_name_tech`")])
 class Planning implements Serializable {
-
+    static final long serialVersionUID = 1L
     @Id
     @Column(name = "`id`")
     Long id
