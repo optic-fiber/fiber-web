@@ -19,14 +19,13 @@ plugins {
 group "com.cheroliv"
 version "0.0.1"
 
-sourceCompatibility = 1.8
-
+//sourceCompatibility = 1.8
+//targetCompatibility = 12
 
 
 springBoot {
     buildInfo()
 }
-
 
 
 configurations {
@@ -64,21 +63,29 @@ dependencies {
     implementation("org.codehaus.groovy:groovy-all:$groovy_version") {
         exclude group: "org.junit", module: "junit"
     }
+
+    implementation "org.springframework.boot:spring-boot-starter-validation:$spring_boot_version"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa:$spring_boot_version"
+    implementation "org.springframework.security:spring-security-web:$spring_version"
+    implementation "org.springframework.security:spring-security-config:$spring_version"
+    implementation "org.springframework.security:spring-security-data"
+    implementation "org.springframework.cloud:spring-cloud-starter-openfeign:2.1.1.RELEASE"
+    implementation "org.springframework.boot:spring-boot-starter-cache"
     implementation("org.springframework.boot:spring-boot-starter-web:$spring_boot_version") {
         exclude group: "org.springframework.boot", module: "spring-boot-starter-tomcat"
     }
-    implementation "org.springframework.boot:spring-boot-starter-jetty:$spring_boot_version"
-//    implementation "org.springframework.boot:spring-boot-starter:$spring_boot_version"
-    implementation "org.springframework.boot:spring-boot-starter-validation:$spring_boot_version"
-    implementation "org.springframework.boot:spring-boot-starter-data-jpa:$spring_boot_version"
-//    implementation "org.springframework.security:spring-security-config:$spring_version"
+//    implementation "org.springframework.boot:spring-boot-starter-jetty:$spring_boot_version"
+    implementation "org.springframework.boot:spring-boot-starter-undertow"
+    implementation "io.jsonwebtoken:jjwt-api:0.10.6"
+    runtimeOnly "io.jsonwebtoken:jjwt-impl:0.10.6"
+    runtimeOnly "io.jsonwebtoken:jjwt-jackson:0.10.6"
+    implementation "org.apache.commons:commons-lang3"
 //    implementation "org.springframework.boot:spring-boot-starter-data-rest:$spring_boot_version"
 //    implementation "org.springframework.boot:spring-boot-starter-jersey:$spring_boot_version"
 //    implementation "org.springframework.boot:spring-boot-starter-mail:$spring_boot_version"
 //    implementation "org.springframework.boot:spring-boot-starter-cache:$spring_boot_version"
 
 //    implementation "org.springframework.security:spring-security-data:$spring_version"
-//    implementation "org.springframework.security:spring-security-web:$spring_version"
 
 //    implementation "org.springframework.boot:spring-boot-starter-quartz:$spring_boot_version"
 //    implementation "commons-io:commons-io:$commons_io_version"
@@ -98,14 +105,17 @@ dependencies {
 //    implementation "javax.cache:cache-api:1.1.0"
 //    implementation "org.ehcache:ehcache:3.7.1"
 //    implementation "org.hibernate:hibernate-jcache"
-//    implementation "org.zalando:problem-spring-web:0.24.0"
-//
-//
+    implementation "org.zalando:problem-spring-web:0.24.0"
+//    implementation "org.zalando:problem-spring-web"
+
     runtimeOnly "org.postgresql:postgresql:$postgresql_driver_version"
 
     testImplementation("org.springframework.boot:spring-boot-starter-test:$spring_boot_version") {
-        exclude group: "org.junit", module: "junit"
+        exclude module: "junit"
+        exclude group: "com.vaadin.external.google", module: "android-json"
     }
+    testImplementation "org.springframework.security:spring-security-test"
+    testImplementation "org.springframework.boot:spring-boot-test"
 //    testImplementation "com.xlson.groovycsv:groovycsv:$groovyCsvVersion"
 //    testImplementation "com.h2database:h2:$h2database_version"
 //    implementation "com.google.guava:guava:${guavaVersion}"
@@ -143,7 +153,9 @@ dependencies {
 //    implementation "org.springframework.session:spring-session-core"
 //    developmentOnly "org.springframework.boot:spring-boot-devtools"
 //    runtimeOnly "org.postgresql:postgresql"
-//    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+    annotationProcessor ("org.springframework.boot:spring-boot-configuration-processor") {
+        exclude group: "com.vaadin.external.google", module: "android-json"
+    }
 //    testImplementation "org.springframework.boot:spring-boot-starter-test"
 //    testImplementation "de.flapdoodle.embed:de.flapdoodle.embed.mongo"
 //    testImplementation "io.projectreactor:reactor-test"

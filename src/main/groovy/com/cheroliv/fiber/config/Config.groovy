@@ -1,8 +1,14 @@
 package com.cheroliv.fiber.config
 
 import groovy.transform.CompileStatic
+import org.springframework.cache.annotation.EnableCaching
+import org.springframework.cloud.openfeign.EnableFeignClients
+import org.springframework.cloud.openfeign.FeignClientsConfiguration
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Import
+
+import javax.annotation.PostConstruct
 
 //import groovy.transform.CompileStatic
 //import org.springframework.boot.autoconfigure.domain.EntityScan
@@ -25,10 +31,15 @@ import org.springframework.context.annotation.Configuration
 @CompileStatic
 @Configuration
 @ComponentScan("com.cheroliv.fiber")
+//@EnableConfigurationProperties([FiberProperties.class])
 //@EnableTransactionManagement
 //@EnableJpaRepositories("com.cheroliv.fiber.dao")
 //@EntityScan("com.cheroliv.fiber.domain")
 //@Import([CacheConfiguration.class])
+@EnableCaching
+@EnableFeignClients(basePackages = "com.cheroliv.fiber")
+@Import([FeignClientsConfiguration.class,
+        SecurityConfiguration.class])
 class Config {
 
 //    @Bean

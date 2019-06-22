@@ -17,7 +17,7 @@ import java.time.ZonedDateTime
         @Index(name = "`uniq_idx_nd_type`", columnList = "`nd`,`type_inter`", unique = true),
         @Index(name = "`idx_inter_type`", columnList = "`type_inter`"),
         @Index(name = "`idx_inter_contract`", columnList = "`contract`"),
-        @Index(name = "`idx_inter_date_inter`", columnList = "`date_inter`"),
+        @Index(name = "`idx_inter_date_time_inter`", columnList = "`date_time_inter`"),
         @Index(name = "`idx_inter_first_name_client`", columnList = "`first_name_client`"),
         @Index(name = "`idx_inter_last_name_client`", columnList = "`last_name_client`")])
 class Inter implements Serializable, InterConstants {
@@ -40,8 +40,8 @@ class Inter implements Serializable, InterConstants {
     @Enumerated(EnumType.STRING)
     @Column(name = "`contract`", nullable = false)
     ContractEnum contract
-    @Column(name = "`date_inter`")
-    ZonedDateTime dateInter
+    @Column(name = "`date_time_inter`")
+    ZonedDateTime dateTimeInter
     @Size(max = 100)
     @Column(name = "`first_name_client`")
     String firstNameClient

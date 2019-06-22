@@ -14,7 +14,7 @@ import java.time.ZonedDateTime
 @Table(name = "`planning`",indexes = [
         @Index(name = "`idx_planning_initial_tech`", columnList = "`initial_tech`"),
         @Index(name = "`idx_planning_open`", columnList = "`open`"),
-        @Index(name = "`idx_planning_date_creation`", columnList = "`date_creation`"),
+        @Index(name = "`idx_planning_date_time_creation`", columnList = "`date_time_creation`"),
         @Index(name = "`idx_planning_last_name_tech`", columnList = "`last_name_tech`"),
         @Index(name = "`idx_planning_first_name_tech`", columnList = "`first_name_tech`")])
 class Planning implements Serializable {
@@ -30,8 +30,8 @@ class Planning implements Serializable {
     @Column(name="`open`",nullable = false)
     Boolean open
     @NotNull
-    @Column(name="`date_creation`")
-    ZonedDateTime dateCreation
+    @Column(name="`date_time_creation`")
+    ZonedDateTime dateTimeCreation
     @Size(max = 100)
     @Column(name="`last_name_tech`",length = 100)
     String lastNameTech
@@ -50,7 +50,7 @@ class Planning implements Serializable {
 
         Planning planning = (Planning) o
 
-        if (dateCreation != planning.dateCreation) return false
+        if (dateTimeCreation != planning.dateTimeCreation) return false
         if (firstNameTech != planning.firstNameTech) return false
         if (lastNameTech != planning.lastNameTech) return false
         if (open != planning.open) return false
@@ -63,7 +63,7 @@ class Planning implements Serializable {
         int result
         result = (initialTech != null ? initialTech.hashCode() : 0)
         result = 31 * result + (open != null ? open.hashCode() : 0)
-        result = 31 * result + (dateCreation != null ? dateCreation.hashCode() : 0)
+        result = 31 * result + (dateTimeCreation != null ? dateTimeCreation.hashCode() : 0)
         result = 31 * result + (lastNameTech != null ? lastNameTech.hashCode() : 0)
         result = 31 * result + (firstNameTech != null ? firstNameTech.hashCode() : 0)
         return result
