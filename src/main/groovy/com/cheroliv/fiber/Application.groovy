@@ -75,28 +75,3 @@ class Application {
         }
     }
 }
-/*
-login
-
-                 password
-
-                 firstName
-
-                 lastName
-
-                 email
-
-                activated
-
-                 langKey
-
-                imageUrl
-
-                 activationKey
-
-               resetKey
-
-                 resetDate
-
-                 createdDate
- */
