@@ -50,7 +50,7 @@ final class SecurityUtils {
      */
     static Optional<String> getCurrentUserJWT() {
         SecurityContext securityContext = SecurityContextHolder.getContext()
-        return Optional.ofNullable(securityContext.getAuthentication())
+        Optional.ofNullable(securityContext.getAuthentication())
                 .filter(new Predicate<Authentication>() {
                     @Override
                     boolean test(Authentication authentication) {
@@ -72,7 +72,7 @@ final class SecurityUtils {
      */
     static boolean isAuthenticated() {
         SecurityContext securityContext = SecurityContextHolder.getContext()
-        return Optional.ofNullable(securityContext.getAuthentication())
+        Optional.ofNullable(securityContext.getAuthentication())
                 .map(new Function<Authentication, Boolean>() {
                     @Override
                     Boolean apply(Authentication authentication) {
@@ -117,7 +117,7 @@ final class SecurityUtils {
      * @return the generated password.
      */
     static String generatePassword() {
-        return RandomStringUtils.randomAlphanumeric(DEF_COUNT)
+        RandomStringUtils.randomAlphanumeric DEF_COUNT
     }
 
     /**

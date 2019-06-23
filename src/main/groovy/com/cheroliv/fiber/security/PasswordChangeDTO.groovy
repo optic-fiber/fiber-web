@@ -1,8 +1,11 @@
 package com.cheroliv.fiber.security
 
+import groovy.transform.CompileStatic
+
+@CompileStatic
 class PasswordChangeDTO {
-    private String currentPassword
-    private String newPassword
+     String currentPassword
+     String newPassword
 
     PasswordChangeDTO(String currentPassword, String newPassword) {
         this.currentPassword = currentPassword

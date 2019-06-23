@@ -3,10 +3,9 @@ package com.cheroliv.fiber.security
 import com.cheroliv.fiber.domain.Authority
 import com.cheroliv.fiber.domain.User
 import com.cheroliv.fiber.repository.UserRepository
+import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
@@ -17,17 +16,17 @@ import org.springframework.transaction.annotation.Transactional
 
 import java.util.function.Function
 import java.util.function.Supplier
+import java.util.stream.Collector
 import java.util.stream.Collectors
 
-/**
- * Authenticate a user from the database.
- */
+
 @Slf4j
+@CompileStatic
 @Component("userDetailsService")
 class DomainUserDetailsService implements UserDetailsService {
 
 
-    private final UserRepository userRepository
+    final UserRepository userRepository
 
     DomainUserDetailsService(UserRepository userRepository) {
         this.userRepository = userRepository
@@ -39,33 +38,33 @@ class DomainUserDetailsService implements UserDetailsService {
         log.debug("Authenticating {}", login)
 
         if (new EmailValidator().isValid(login, null)) {
-            return userRepository.findOneWithAuthoritiesByEmail(login)
+            userRepository.findOneWithAuthoritiesByEmail(login)
                     .map(new Function<User, org.springframework.security.core.userdetails.User>() {
                         @Override
                         org.springframework.security.core.userdetails.User apply(User user) {
-                            return DomainUserDetailsService.this.createSpringSecurityUser(login, user)
+                            DomainUserDetailsService.this.createSpringSecurityUser(login, user)
                         }
                     })
                     .orElseThrow(new Supplier<UsernameNotFoundException>() {
                         @Override
                         UsernameNotFoundException get() {
-                            return new UsernameNotFoundException("User with email " + login + " was not found in the database")
+                            new UsernameNotFoundException("User with email " + login + " was not found in the database")
                         }
                     })
         }
 
         String lowercaseLogin = login.toLowerCase(Locale.ENGLISH)
-        return userRepository.findOneWithAuthoritiesByLogin(lowercaseLogin)
+        userRepository.findOneWithAuthoritiesByLogin(lowercaseLogin)
                 .map(new Function<User, org.springframework.security.core.userdetails.User>() {
                     @Override
                     org.springframework.security.core.userdetails.User apply(User user) {
-                        return DomainUserDetailsService.this.createSpringSecurityUser(lowercaseLogin, user)
+                        DomainUserDetailsService.this.createSpringSecurityUser(lowercaseLogin, user)
                     }
                 })
                 .orElseThrow(new Supplier<UsernameNotFoundException>() {
                     @Override
                     UsernameNotFoundException get() {
-                        return new UsernameNotFoundException("User " + lowercaseLogin + " was not found in the database")
+                        new UsernameNotFoundException("User " + lowercaseLogin + " was not found in the database")
                     }
                 })
 
@@ -79,11 +78,11 @@ class DomainUserDetailsService implements UserDetailsService {
                 .map(new Function<Authority, SimpleGrantedAuthority>() {
                     @Override
                     SimpleGrantedAuthority apply(Authority authority) {
-                        return new SimpleGrantedAuthority(authority.getName())
+                        new SimpleGrantedAuthority(authority.getName())
                     }
                 })
-                .collect(Collectors.toList())
-        return new org.springframework.security.core.userdetails.User(user.getLogin(),
+                .collect(Collectors.toList() as Collector<? super SimpleGrantedAuthority, ?, List<GrantedAuthority>>)
+        new org.springframework.security.core.userdetails.User(user.getLogin(),
                 user.getPassword(),
                 grantedAuthorities)
     }

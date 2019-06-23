@@ -2,6 +2,7 @@ package com.cheroliv.fiber.security
 
 import com.cheroliv.fiber.domain.Authority
 import com.cheroliv.fiber.domain.User
+import groovy.transform.CompileStatic
 
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
@@ -9,6 +10,7 @@ import javax.validation.constraints.Pattern
 import javax.validation.constraints.Size
 import java.time.Instant
 
+@CompileStatic
 class UserDTO {
     Long id
     @NotBlank

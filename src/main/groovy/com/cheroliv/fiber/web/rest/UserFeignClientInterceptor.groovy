@@ -3,14 +3,16 @@ package com.cheroliv.fiber.web.rest
 import com.cheroliv.fiber.security.SecurityUtils
 import feign.RequestInterceptor
 import feign.RequestTemplate
+import groovy.transform.CompileStatic
 import org.springframework.stereotype.Component
 
 import java.util.function.Consumer
 
+@CompileStatic
 @Component
 class UserFeignClientInterceptor implements RequestInterceptor {
-    private static final String AUTHORIZATION_HEADER = "Authorization"
-    private static final String BEARER = "Bearer"
+    static final String AUTHORIZATION_HEADER = "Authorization"
+    static final String BEARER = "Bearer"
 
     @Override
     void apply(RequestTemplate template) {

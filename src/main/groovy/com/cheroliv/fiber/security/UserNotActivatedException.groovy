@@ -1,10 +1,9 @@
 package com.cheroliv.fiber.security
 
+import groovy.transform.CompileStatic
 import org.springframework.security.core.AuthenticationException
 
-/**
- * This exception is thrown in case of a not activated user trying to authenticate.
- */
+@CompileStatic
 class UserNotActivatedException extends AuthenticationException {
 
     private static final long serialVersionUID = 1L

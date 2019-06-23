@@ -52,4 +52,31 @@ class Inter implements Serializable, InterConstants {
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false, name = "`planning_id`")
     Planning planning
+
+    boolean equals(o) {
+        if (this.is(o)) return true
+        if (this.class != o.class) return false
+
+        Inter inter = (Inter) o
+
+        if (contract != inter.contract) return false
+        if (dateTimeInter != inter.dateTimeInter) return false
+        if (firstNameClient != inter.firstNameClient) return false
+        if (lastNameClient != inter.lastNameClient) return false
+        if (nd != inter.nd) return false
+        if (typeInter != inter.typeInter) return false
+
+        return true
+    }
+
+    int hashCode() {
+        int result
+        result = (nd != null ? nd.hashCode() : 0)
+        result = 31 * result + (typeInter != null ? typeInter.hashCode() : 0)
+        result = 31 * result + (contract != null ? contract.hashCode() : 0)
+        result = 31 * result + (dateTimeInter != null ? dateTimeInter.hashCode() : 0)
+        result = 31 * result + (firstNameClient != null ? firstNameClient.hashCode() : 0)
+        result = 31 * result + (lastNameClient != null ? lastNameClient.hashCode() : 0)
+        return result
+    }
 }

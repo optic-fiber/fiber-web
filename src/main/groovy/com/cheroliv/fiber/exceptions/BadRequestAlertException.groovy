@@ -27,6 +27,6 @@ class BadRequestAlertException extends AbstractThrowableProblem {
         Map<String, Object> parameters = new HashMap<>()
         parameters.put("message", "error." + errorKey)
         parameters.put("params", entityName)
-        return parameters
+        parameters
     }
 }

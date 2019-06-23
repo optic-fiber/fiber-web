@@ -10,9 +10,7 @@ import org.springframework.stereotype.Repository
 
 import java.time.Instant
 
-/**
- * Spring Data JPA repository for the {@link User} entity.
- */
+
 @Repository
 interface UserRepository extends JpaRepository<User, Long> {
 

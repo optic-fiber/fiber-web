@@ -26,11 +26,11 @@ class JWTFilter extends GenericFilterBean {
     @Override
     void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
             throws IOException, ServletException {
-        HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest
+        HttpServletRequest httpServletRequest = servletRequest as HttpServletRequest
         String jwt = resolveToken(httpServletRequest)
         if (StringUtils.hasText(jwt) && this.tokenProvider.validateToken(jwt)) {
             Authentication authentication = this.tokenProvider.getAuthentication(jwt)
-            SecurityContextHolder.getContext().setAuthentication(authentication)
+            SecurityContextHolder.context.setAuthentication(authentication)
         }
         filterChain.doFilter(servletRequest, servletResponse)
     }
@@ -40,6 +40,6 @@ class JWTFilter extends GenericFilterBean {
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7)
         }
-        return null
+        null
     }
 }

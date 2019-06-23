@@ -112,7 +112,7 @@ class TokenProvider implements InitializingBean {
             validity = new Date(now + this.tokenValidityInMilliseconds)
         }
 
-        return Jwts.builder()
+        Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim(AUTHORITIES_KEY, authorities)
                 .signWith(key, SignatureAlgorithm.HS512)
@@ -135,7 +135,7 @@ class TokenProvider implements InitializingBean {
 
         User principal = new User(claims.getSubject(), "", authorities)
 
-        return new UsernamePasswordAuthenticationToken(principal, token, authorities)
+        new UsernamePasswordAuthenticationToken(principal, token, authorities)
 
     }
 
@@ -156,6 +156,6 @@ class TokenProvider implements InitializingBean {
             log.info("JWT token compact of handler are invalid.")
             log.trace("JWT token compact of handler are invalid trace: {}", e)
         }
-        return false
+        false
     }
 }

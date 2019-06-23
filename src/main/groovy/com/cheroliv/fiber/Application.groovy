@@ -44,34 +44,49 @@ class Application {
         if (!authorityRepository.findById(AuthoritiesConstants.ANONYMOUS).present)
             authorityRepository.save(new Authority(name: AuthoritiesConstants.ANONYMOUS))
 
-        Optional<User> optionalAdminUser = userService.getUserWithAuthoritiesByLogin("admin")
+        Optional<User> optionalAdminUser = userService.getUserWithAuthoritiesByLogin "admin"
         if (!optionalAdminUser.present) {
-            Set adminAuths = [new Authority(name: AuthoritiesConstants.USER),
-                              new Authority(name: AuthoritiesConstants.ADMIN)] as Set
             userService.registerUser(new UserDTO(new User(
                     login: "admin",
                     firstName: "admin",
                     lastName: "admin",
-                    email: "admin@acme.com",
-                    authorities: adminAuths)),
+                    email: "admin@localhost")),
                     "admin")
-            User admin = userRepository.findOneByLogin("admin")?.get()
-            admin.activated = true
-            userRepository.save(admin)
+            User user = userRepository.findOneByLogin("admin")?.get()
+            user.activated = true
+            user.authorities = [authorityRepository.findById(AuthoritiesConstants.USER)?.get(),
+                                authorityRepository.findById(AuthoritiesConstants.ADMIN)?.get()] as Set
+            userRepository.save(user)
         }
         Optional<User> optionalUser = userService.getUserWithAuthoritiesByLogin("user")
         if (!optionalUser.present) {
-            Set userAuths = [new Authority(name: AuthoritiesConstants.USER)] as Set
+            Set authorities = [new Authority(name: AuthoritiesConstants.USER)] as Set
             userService.registerUser(new UserDTO(new User(
                     login: "user",
                     firstName: "user",
                     lastName: "user",
-                    email: "user@acme.com",
-                    authorities: userAuths)),
+                    email: "user@localhost",
+                    authorities: authorities)),
                     "user")
             User user = userRepository.findOneByLogin("user")?.get()
             user.activated = true
             userRepository.save(user)
         }
+        Optional<User> optionalSystemUser = userService.getUserWithAuthoritiesByLogin("system")
+        if (!optionalUser.present) {
+            Set authorities = [new Authority(name: AuthoritiesConstants.ADMIN),
+                               new Authority(name: AuthoritiesConstants.USER)] as Set
+            userService.registerUser(new UserDTO(new User(
+                    login: "system",
+                    firstName: "system",
+                    lastName: "system",
+                    email: "system@localhost",
+                    authorities: authorities)),
+                    "system")
+            User user = userRepository.findOneByLogin("system")?.get()
+            user.activated = true
+            userRepository.save(user)
+        }
+
     }
 }
