@@ -1,6 +1,7 @@
 pluginManagement {
 	repositories {
 		gradlePluginPortal()
+		maven { url "http://repo.spring.io/plugins-release" }
 	}
 }
 rootProject.name = 'fiber-web'

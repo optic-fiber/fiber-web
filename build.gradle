@@ -1,33 +1,34 @@
 buildscript {
     repositories {
         mavenCentral()
-        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath "io.spring.gradle:propdeps-plugin:0.0.10.RELEASE"
     }
 }
 
 plugins {
     id "groovy"
     id "java"
-id "war"
+    id "war"
     id "idea"
     id "application"
     id "com.gradle.build-scan" version "2.3"
     id "org.asciidoctor.convert" version "1.5.3"
     id "org.springframework.boot" version "2.1.6.RELEASE"
     id "io.spring.dependency-management" version "1.0.8.RELEASE"
+    id "org.openapi.generator" version "4.0.2"
 }
+apply plugin: "propdeps"
 
-group "com.cheroliv"
-version "0.0.1"
-
-//sourceCompatibility = 1.8
-//targetCompatibility = 12
-
-
-springBoot {
-    buildInfo()
+repositories {
+    mavenCentral()
+    jcenter()
+    maven { url "https://jitpack.io" }
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+    maven { url "https://repo.spring.io/milestone" }
+    maven { url "https://repo1.maven.org/maven2/" }
 }
-
 
 configurations {
     developmentOnly
@@ -36,91 +37,63 @@ configurations {
     }
 }
 
-ext {
-    set("snippetsDir", file("build/generated-snippets"))
-}
-
-test {
-    outputs.dir snippetsDir
-}
-test {
-    useJUnitPlatform()
-}
-asciidoctor {
-    inputs.dir snippetsDir
-    dependsOn test
-}
-
-repositories {
-    mavenCentral()
-    maven { url "https://jitpack.io" }
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-    maven { url "https://repo.spring.io/milestone" }
-}
-
 dependencies {
-    developmentOnly "org.springframework.boot:spring-boot-devtools:$spring_boot_version"
-
     implementation("org.codehaus.groovy:groovy-all:$groovy_version") {
         exclude group: "org.junit", module: "junit"
     }
-
-    implementation "org.springframework.boot:spring-boot-starter-validation:$spring_boot_version"
-    implementation "org.springframework.boot:spring-boot-starter-data-jpa:$spring_boot_version"
-    implementation "org.springframework.security:spring-security-web:$spring_version"
-    implementation "org.springframework.security:spring-security-config:$spring_version"
-    implementation "org.springframework.security:spring-security-data"
-    implementation "org.springframework.cloud:spring-cloud-starter-openfeign:2.1.1.RELEASE"
-    implementation "org.springframework.boot:spring-boot-starter-cache"
+    runtimeOnly "org.postgresql:postgresql:$postgresql_driver_version"    
+    developmentOnly "org.springframework.boot:spring-boot-devtools:$spring_boot_version"
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor") {
+        exclude group: "com.vaadin.external.google", module: "android-json"
+    }
     implementation("org.springframework.boot:spring-boot-starter-web:$spring_boot_version") {
         exclude group: "org.springframework.boot", module: "spring-boot-starter-tomcat"
     }
-//    implementation "org.springframework.boot:spring-boot-starter-jetty:$spring_boot_version"
     implementation "org.springframework.boot:spring-boot-starter-undertow"
+    implementation "org.springframework.boot:spring-boot-starter-validation:$spring_boot_version"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa:$spring_boot_version"
+    implementation "org.springframework.security:spring-security-web:$spring_security_version"
+    implementation "org.springframework.security:spring-security-config:$spring_security_version"
+    implementation "org.springframework.security:spring-security-data:$spring_security_version"
+    implementation "org.springframework.cloud:spring-cloud-starter-openfeign:2.1.1.RELEASE"
+    implementation "org.springframework.boot:spring-boot-starter-cache"    
+    implementation "org.zalando:problem-spring-web:0.24.0"
     implementation "io.jsonwebtoken:jjwt-api:0.10.6"
     runtimeOnly "io.jsonwebtoken:jjwt-impl:0.10.6"
     runtimeOnly "io.jsonwebtoken:jjwt-jackson:0.10.6"
     implementation "org.apache.commons:commons-lang3"
-//    implementation "org.springframework.boot:spring-boot-starter-data-rest:$spring_boot_version"
-//    implementation "org.springframework.boot:spring-boot-starter-jersey:$spring_boot_version"
-//    implementation "org.springframework.boot:spring-boot-starter-mail:$spring_boot_version"
-//    implementation "org.springframework.boot:spring-boot-starter-cache:$spring_boot_version"
+    implementation ("io.springfox:springfox-swagger2:${swagger_version}") {
+        exclude module: "mapstruct"
+    }
+    implementation "io.springfox:springfox-swagger-ui:${swagger_version}"
+    implementation "io.springfox:springfox-bean-validators:${swagger_version}"
+    implementation "org.mapstruct:mapstruct:${mapstruct_version}"
+    implementation "commons-io:commons-io:$commons_io_version"
+    implementation "com.jameskleeh:excel-builder:$excel_builder_version"
+    implementation "org.apache.poi:poi:$poi_version"
+    implementation "org.apache.poi:poi-ooxml:$poi_version"
 
-//    implementation "org.springframework.security:spring-security-data:$spring_version"
-
-//    implementation "org.springframework.boot:spring-boot-starter-quartz:$spring_boot_version"
-//    implementation "commons-io:commons-io:$commons_io_version"
-
-//    implementation "org.liquibase:liquibase-core"
-
-//    implementation "io.springfox:springfox-swagger2:2.9.2"
-//    implementation "io.springfox:springfox-swagger-ui:2.9.2"
-
-//    implementation "com.jameskleeh:excel-builder:$excel_builder_version"
-//    implementation "org.apache.poi:poi:$poi_version"
-//    implementation "org.apache.poi:poi-ooxml:$poi_version"
-//
-//    implementation "javax.persistence:javax.persistence-api:$javax_persistence_api_version"
-//
-//    implementation "org.hibernate:hibernate-agroal:$hibernate_version"
-//    implementation "javax.cache:cache-api:1.1.0"
-//    implementation "org.ehcache:ehcache:3.7.1"
-//    implementation "org.hibernate:hibernate-jcache"
-    implementation "org.zalando:problem-spring-web:0.24.0"
-//    implementation "org.zalando:problem-spring-web"
-
-    runtimeOnly "org.postgresql:postgresql:$postgresql_driver_version"
-
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_jupiter_version"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit_jupiter_version"
+    testCompileOnly "junit:junit:$junit_version"
+    testRuntimeOnly "org.junit.vintage:junit-vintage-engine:$junit_jupiter_version"
     testImplementation("org.springframework.boot:spring-boot-starter-test:$spring_boot_version") {
         exclude module: "junit"
         exclude group: "com.vaadin.external.google", module: "android-json"
     }
-    testImplementation "org.springframework.security:spring-security-test"
-    testImplementation "org.springframework.boot:spring-boot-test"
-//    testImplementation "com.xlson.groovycsv:groovycsv:$groovyCsvVersion"
-//    testImplementation "com.h2database:h2:$h2database_version"
-//    implementation "com.google.guava:guava:${guavaVersion}"
-//    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    testImplementation "org.springframework.security:spring-security-test:${spring_security_version}"
+    testImplementation "org.springframework.boot:spring-boot-test:${spring_boot_version}"
+    testImplementation "com.xlson.groovycsv:groovycsv:${groovy_csv_version}"
+
+//    implementation "org.springframework.boot:spring-boot-starter-data-rest:$spring_boot_version"
+//    implementation "org.springframework.boot:spring-boot-starter-jersey:$spring_boot_version"
+//    implementation "org.springframework.boot:spring-boot-starter-mail:$spring_boot_version"
+//    implementation "org.springframework.boot:spring-boot-starter-cache:$spring_boot_version"
+//    implementation "org.springframework.security:spring-security-data:$spring_version"
+//    implementation "org.springframework.boot:spring-boot-starter-quartz:$spring_boot_version"
+//    implementation "javax.cache:cache-api:1.1.0"
+//    implementation "org.ehcache:ehcache:3.7.1"
+//    implementation "org.hibernate:hibernate-jcache"
 //    implementation "org.springframework.boot:spring-boot-starter-data-rest"
 //    implementation "org.springframework.boot:spring-boot-starter-groovy-templates"
 //    implementation "org.springframework.boot:spring-boot-starter-hateoas"
@@ -129,15 +102,12 @@ dependencies {
 //    implementation "org.springframework.boot:spring-boot-starter-web"
 //    implementation "org.springframework.boot:spring-boot-starter-webflux"
 //    implementation "org.springframework.boot:spring-boot-starter-websocket"
-//    implementation "org.codehaus.groovy:groovy"
 //    implementation "org.springframework.data:spring-data-rest-hal-browser"
 //    implementation "org.springframework.session:spring-session-core"
-
 //    testImplementation "org.springframework.boot:spring-boot-starter-test"
 //    testImplementation "io.projectreactor:reactor-test"
 //    testImplementation "org.springframework.restdocs:spring-restdocs-mockmvc"
 //    testImplementation "org.springframework.security:spring-security-test"
-
 //    implementation "org.springframework.boot:spring-boot-starter-actuator"
 //    implementation "org.springframework.boot:spring-boot-starter-cache"
 //    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
@@ -149,28 +119,66 @@ dependencies {
 //    implementation "org.springframework.boot:spring-boot-starter-security"
 //    implementation "org.springframework.boot:spring-boot-starter-web"
 //    implementation "org.springframework.boot:spring-boot-starter-webflux"
-//    implementation "org.codehaus.groovy:groovy"
 //    implementation "org.springframework.data:spring-data-rest-hal-browser"
 //    implementation "org.springframework.session:spring-session-core"
-//    developmentOnly "org.springframework.boot:spring-boot-devtools"
-//    runtimeOnly "org.postgresql:postgresql"
-    annotationProcessor ("org.springframework.boot:spring-boot-configuration-processor") {
-        exclude group: "com.vaadin.external.google", module: "android-json"
-    }
 //    testImplementation "org.springframework.boot:spring-boot-starter-test"
 //    testImplementation "de.flapdoodle.embed:de.flapdoodle.embed.mongo"
 //    testImplementation "io.projectreactor:reactor-test"
 //    testImplementation "org.springframework.restdocs:spring-restdocs-mockmvc"
 //    testImplementation "org.springframework.security:spring-security-test"
-
-
-    testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_jupiter_version"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit_jupiter_version"
-    testCompileOnly "junit:junit:$junit_version"
-    testRuntimeOnly "org.junit.vintage:junit-vintage-engine:$junit_jupiter_version"
-
-//    testImplementation "org.junit.jupiter:junit-jupiter-api"
-//    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
-//    testCompileOnly "junit:junit"
-//    testRuntimeOnly "org.junit.vintage:junit-vintage-engine"
 }
+
+group "com.cheroliv"
+version "0.0.1"
+
+sourceCompatibility = 1.8
+//targetCompatibility = 12
+
+idea {
+    module {
+        excludeDirs += files("node_modules")
+    }
+}
+
+springBoot {
+    buildInfo()
+}
+
+ext {
+    set("snippetsDir", file("build/generated-snippets"))
+}
+
+test {
+    useJUnitPlatform()
+    outputs.dir snippetsDir
+}
+
+asciidoctor {
+    inputs.dir snippetsDir
+    dependsOn test
+}
+
+openApiGenerate {
+    generatorName = "spring"
+    inputSpec = "$rootDir/src/main/resources/swagger/api.yml".toString()
+    outputDir = "$buildDir/openapi".toString()
+    apiPackage = "com.cheroliv.fiber.web.api"
+    modelPackage = "com.cheroliv.fiber.web.api.model"
+    apiFilesConstrainedTo = [""]
+    modelFilesConstrainedTo = [""]
+    supportingFilesConstrainedTo = ["ApiUtil.groovy"]
+    configOptions = [delegatePattern: "true", title: "fiber-web"]
+    validateSpec = true
+    importMappings = [Problem:"org.zalando.problem.Problem"]
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir file("${project.buildDir.path}/openapi/src/main/java")
+        }
+    }
+}
+compileGroovy.dependsOn("openApiGenerate")
+
+

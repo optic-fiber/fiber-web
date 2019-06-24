@@ -38,3 +38,4 @@ bin/*
 data/.~lock.*
 local.properties
 _src/*
+/misc/*

@@ -1,4 +1,4 @@
-package com.cheroliv.fiber.web.rest
+package com.cheroliv.fiber.security
 
 import com.cheroliv.fiber.security.SecurityUtils
 import feign.RequestInterceptor

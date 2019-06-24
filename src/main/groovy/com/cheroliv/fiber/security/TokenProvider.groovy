@@ -1,6 +1,6 @@
 package com.cheroliv.fiber.security
 
-import com.cheroliv.fiber.config.FiberDefaults
+import com.cheroliv.fiber.config.FiberProperties
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import io.jsonwebtoken.*
@@ -16,7 +16,6 @@ import org.springframework.security.core.userdetails.User
 import org.springframework.stereotype.Component
 import org.springframework.util.StringUtils
 
-import javax.validation.constraints.NotNull
 import java.nio.charset.StandardCharsets
 import java.security.Key
 
@@ -30,56 +29,13 @@ class TokenProvider implements InitializingBean {
     Key key
     long tokenValidityInMilliseconds
     long tokenValidityInMillisecondsForRememberMe
-    final Security security = new Security()
-
-    static class Security {
-
-        final ClientAuthorization clientAuthorization = new ClientAuthorization()
-
-        final Authentication authentication = new Authentication()
-
-        final RememberMe rememberMe = new RememberMe()
-
-        static class ClientAuthorization {
-
-            String accessTokenUri = FiberDefaults.Security.ClientAuthorization.accessTokenUri
-
-            String tokenServiceId = FiberDefaults.Security.ClientAuthorization.tokenServiceId
-
-            String clientId = FiberDefaults.Security.ClientAuthorization.clientId
-
-            String clientSecret = FiberDefaults.Security.ClientAuthorization.clientSecret
-        }
-
-        static class Authentication {
-
-            final Jwt jwt = new Jwt()
-
-            static class Jwt {
-
-                String secret = FiberDefaults.Security.Authentication.Jwt.secret
-
-                String base64Secret = FiberDefaults.Security.Authentication.Jwt.base64Secret
-
-                long tokenValidityInSeconds = FiberDefaults.Security.Authentication.Jwt
-                        .tokenValidityInSeconds
-
-                long tokenValidityInSecondsForRememberMe = FiberDefaults.Security.Authentication.Jwt
-                        .tokenValidityInSecondsForRememberMe
-            }
-        }
-
-        static class RememberMe {
-
-            @NotNull
-            String key = FiberDefaults.Security.RememberMe.key
-        }
-    }
+    final FiberProperties properties
 
     @Override
     void afterPropertiesSet() throws Exception {
         byte[] keyBytes
-        String secret = security.authentication.jwt.secret
+        log.info "properties.security.authentication.jwt.secret : ${properties.security.authentication.jwt.secret}"
+        String secret = properties.security.authentication.jwt.secret
         if (!StringUtils.isEmpty(secret)) {
             log.warn("Warning: the JWT key used is not Base64-encoded. " +
                     "We recommend using the `jhipster.security.authentication.jwt.base64-secret` key for optimum security.")
@@ -91,9 +47,9 @@ class TokenProvider implements InitializingBean {
         }
         this.key = Keys.hmacShaKeyFor(keyBytes)
         this.tokenValidityInMilliseconds =
-                1000 * security.authentication.jwt.tokenValidityInSeconds
+                1000 * properties.security.authentication.jwt.tokenValidityInSeconds
         this.tokenValidityInMillisecondsForRememberMe =
-                1000 * security.authentication.jwt.tokenValidityInSecondsForRememberMe
+                1000 * properties.security.authentication.jwt.tokenValidityInSecondsForRememberMe
     }
 
     String createToken(Authentication authentication, boolean rememberMe) {
