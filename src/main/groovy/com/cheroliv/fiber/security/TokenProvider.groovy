@@ -7,6 +7,7 @@ import io.jsonwebtoken.*
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.InitializingBean
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
@@ -29,14 +30,15 @@ class TokenProvider implements InitializingBean {
     Key key
     long tokenValidityInMilliseconds
     long tokenValidityInMillisecondsForRememberMe
-    final FiberProperties properties
+    @Autowired
+    FiberProperties properties
 
     @Override
     void afterPropertiesSet() throws Exception {
         byte[] keyBytes
-//        log.info "properties.security.authentication.jwt.secret : ${properties.security.authentication.jwt.secret}"
-//        String secret = properties.security.authentication.jwt.secret
-        String secret = ""//properties.security.authentication.jwt.secret
+        log.info "properties.security.authentication.jwt.secret : ${properties.security.authentication.jwt.secret}"
+        String secret = properties.security.authentication.jwt.secret
+//        String secret = ""//properties.security.authentication.jwt.secret
         if (!StringUtils.isEmpty(secret)) {
             keyBytes = secret?.getBytes(StandardCharsets.UTF_8)
         } else {
@@ -45,6 +47,10 @@ class TokenProvider implements InitializingBean {
 //            keyBytes = Decoders.BASE64.decode(security.authentication.jwt.base64Secret)
         }
         this.key = Keys.hmacShaKeyFor(keyBytes)
+
+        log.info "properties.security.authentication.jwt.tokenValidityInSeconds : ${properties.security.authentication.jwt.tokenValidityInSeconds}"
+
+
         this.tokenValidityInMilliseconds =
                 1000 * properties.security.authentication.jwt.tokenValidityInSeconds
         this.tokenValidityInMillisecondsForRememberMe =

@@ -1,17 +1,11 @@
 package com.cheroliv.fiber.config
 
-import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.context.annotation.PropertySource
-import org.springframework.context.annotation.PropertySources
+import org.springframework.stereotype.Component
 import org.springframework.web.cors.CorsConfiguration
 
 import javax.validation.constraints.NotNull
 
-@ConfigurationProperties(prefix = "fiber", ignoreUnknownFields = false)
-@PropertySources([
-        @PropertySource(value = "classpath:git.properties", ignoreResourceNotFound = true),
-        @PropertySource(value = "classpath:META-INF/build-info.properties", ignoreResourceNotFound = true)
-])
+@Component
 class FiberProperties {
 
     final Async async = new Async()
@@ -87,14 +81,14 @@ class FiberProperties {
 
                 String url = FiberDefaults.Cache.Hazelcast.ManagementCenter.url
             }
-       }
+        }
 
         static class Ehcache {
 
             int timeToLiveSeconds = FiberDefaults.Cache.Ehcache.timeToLiveSeconds
 
             long maxEntries = FiberDefaults.Cache.Ehcache.maxEntries
-       }
+        }
 
         static class Infinispan {
 
@@ -243,7 +237,7 @@ class FiberProperties {
 
             long reportFrequency = FiberDefaults.Metrics.Logs.reportFrequency
 
-              }
+        }
     }
 
     static class Logging {

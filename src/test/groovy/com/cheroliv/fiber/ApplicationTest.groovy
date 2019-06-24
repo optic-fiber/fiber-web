@@ -10,7 +10,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @Slf4j
 @CompileStatic
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest
 @ExtendWith(SpringExtension.class)
 class ApplicationTest {
 
