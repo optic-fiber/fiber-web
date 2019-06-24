@@ -5,12 +5,8 @@ import groovy.util.logging.Slf4j
 import org.springframework.boot.web.server.WebServerFactory
 import org.springframework.boot.web.server.WebServerFactoryCustomizer
 import org.springframework.boot.web.servlet.ServletContextInitializer
-import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.env.Environment
-import org.springframework.web.cors.CorsConfiguration
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource
-import org.springframework.web.filter.CorsFilter
 
 import javax.servlet.ServletContext
 import javax.servlet.ServletException
@@ -19,7 +15,6 @@ import javax.servlet.ServletException
 @CompileStatic
 @Configuration
 class WebConfigurer implements ServletContextInitializer, WebServerFactoryCustomizer<WebServerFactory> {
-
 
     final Environment env
 
@@ -41,6 +36,7 @@ class WebConfigurer implements ServletContextInitializer, WebServerFactoryCustom
 //        if (env.acceptsProfiles(Profiles.of(JHipsterConstants.SPRING_PROFILE_DEVELOPMENT))) {
 //            initH2Console(servletContext);
 //        }
+
         log.info("Web application fully configured")
     }
 

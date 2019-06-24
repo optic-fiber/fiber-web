@@ -34,12 +34,11 @@ class TokenProvider implements InitializingBean {
     @Override
     void afterPropertiesSet() throws Exception {
         byte[] keyBytes
-        log.info "properties.security.authentication.jwt.secret : ${properties.security.authentication.jwt.secret}"
-        String secret = properties.security.authentication.jwt.secret
+//        log.info "properties.security.authentication.jwt.secret : ${properties.security.authentication.jwt.secret}"
+//        String secret = properties.security.authentication.jwt.secret
+        String secret = ""//properties.security.authentication.jwt.secret
         if (!StringUtils.isEmpty(secret)) {
-            log.warn("Warning: the JWT key used is not Base64-encoded. " +
-                    "We recommend using the `jhipster.security.authentication.jwt.base64-secret` key for optimum security.")
-            keyBytes = secret.getBytes(StandardCharsets.UTF_8)
+            keyBytes = secret?.getBytes(StandardCharsets.UTF_8)
         } else {
             log.debug("Using a Base64-encoded JWT secret key")
             keyBytes = Decoders.BASE64.decode(base64Secret)
