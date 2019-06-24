@@ -42,8 +42,8 @@ spring:
     password:
   thymeleaf:
     cache: true
-  main:
-    banner-mode: off
+#  main:
+#    banner-mode: off
 
 server:
   port: 8080

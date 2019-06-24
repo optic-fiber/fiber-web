@@ -33,7 +33,7 @@ spring:
     host: localhost
   main:
     allow-bean-definition-overriding: true
-    banner-mode: off
+#    banner-mode: off
   messages:
     basename: i18n/messages
   mvc:
