@@ -19,9 +19,6 @@ class JWTFilter extends GenericFilterBean {
 
     TokenProvider tokenProvider
 
-    JWTFilter(TokenProvider tokenProvider) {
-        this.tokenProvider = tokenProvider
-    }
 
     @Override
     void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)

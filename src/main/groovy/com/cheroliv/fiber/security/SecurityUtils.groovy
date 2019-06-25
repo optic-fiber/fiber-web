@@ -18,14 +18,6 @@ import java.util.function.Predicate
 final class SecurityUtils {
     static final int DEF_COUNT = 20
 
-    SecurityUtils() {
-    }
-
-    /**
-     * Get the login of the current user.
-     *
-     * @return the login of the current user.
-     */
     static Optional<String> getCurrentUserLogin() {
         SecurityContext securityContext = SecurityContextHolder.context
         return Optional.ofNullable(securityContext.authentication)

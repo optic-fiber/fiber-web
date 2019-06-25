@@ -1,6 +1,5 @@
 package com.cheroliv.fiber.security
 
-import com.cheroliv.fiber.security.SecurityUtils
 import feign.RequestInterceptor
 import feign.RequestTemplate
 import groovy.transform.CompileStatic
@@ -16,7 +15,7 @@ class UserFeignClientInterceptor implements RequestInterceptor {
 
     @Override
     void apply(RequestTemplate template) {
-        SecurityUtils.getCurrentUserJWT()
+        SecurityUtils.currentUserJWT
                 .ifPresent(new Consumer<String>() {
                     @Override
                     void accept(String s) {

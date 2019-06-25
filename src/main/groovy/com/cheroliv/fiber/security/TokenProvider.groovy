@@ -7,7 +7,6 @@ import io.jsonwebtoken.*
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.InitializingBean
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
@@ -30,8 +29,7 @@ class TokenProvider implements InitializingBean {
     Key key
     long tokenValidityInMilliseconds
     long tokenValidityInMillisecondsForRememberMe
-    @Autowired
-    FiberProperties properties
+    FiberProperties properties = FiberProperties.instance
 
     @Override
     void afterPropertiesSet() throws Exception {

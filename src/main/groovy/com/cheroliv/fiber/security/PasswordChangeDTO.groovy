@@ -6,9 +6,4 @@ import groovy.transform.CompileStatic
 class PasswordChangeDTO {
      String currentPassword
      String newPassword
-
-    PasswordChangeDTO(String currentPassword, String newPassword) {
-        this.currentPassword = currentPassword
-        this.newPassword = newPassword
-    }
 }

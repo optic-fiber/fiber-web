@@ -1,12 +1,13 @@
 package com.cheroliv.fiber.config
 
-import org.springframework.stereotype.Component
+import groovy.transform.CompileStatic
 import org.springframework.web.cors.CorsConfiguration
 
 import javax.validation.constraints.NotNull
 
-@Component
-class FiberProperties {
+@CompileStatic
+@Singleton
+final class FiberProperties {
 
     final Async async = new Async()
 

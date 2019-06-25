@@ -1,121 +1,119 @@
 package com.cheroliv.fiber.config
 
+import com.cheroliv.fiber.web.http.CachingHttpHeadersFilter
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
+import org.springframework.boot.web.server.MimeMappings
 import org.springframework.boot.web.server.WebServerFactory
 import org.springframework.boot.web.server.WebServerFactoryCustomizer
 import org.springframework.boot.web.servlet.ServletContextInitializer
+import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.core.env.Environment
+import org.springframework.http.MediaType
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
+import org.springframework.web.filter.CorsFilter
 
+import javax.servlet.DispatcherType
+import javax.servlet.FilterRegistration
 import javax.servlet.ServletContext
 import javax.servlet.ServletException
+import java.nio.charset.StandardCharsets
+import java.nio.file.Paths
+
+import static java.net.URLDecoder.decode
 
 @Slf4j
 @CompileStatic
 @Configuration
 class WebConfigurer implements ServletContextInitializer, WebServerFactoryCustomizer<WebServerFactory> {
 
-    final Environment env
+    FiberProperties properties = FiberProperties.instance
 
 
-//    public WebConfigurer(Environment env, FiberProperties fiberDefaults) {
-//        this.env = env;
-//        this.fiberDefaults = fiberDefaults;
-//    }
+
+    @Bean
+    CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource()
+        CorsConfiguration config = properties.cors
+        if (config.getAllowedOrigins() != null && !config.getAllowedOrigins().isEmpty()) {
+            log.debug("Registering CORS filter")
+            source.registerCorsConfiguration("/api/**", config)
+            source.registerCorsConfiguration("/management/**", config)
+            source.registerCorsConfiguration("/v2/api-docs", config)
+        }
+        new CorsFilter(source)
+    }
 
     @Override
     void onStartup(ServletContext servletContext) throws ServletException {
-//        if (env.getActiveProfiles().length != 0) {
-//            log.info("Web application configuration, using profiles: {}", (Object[]) env.getActiveProfiles());
-//        }
-//        EnumSet<DispatcherType> disps = EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.ASYNC);
-//        if (env.acceptsProfiles(Profiles.of(JHipsterConstants.SPRING_PROFILE_PRODUCTION))) {
-//            initCachingHttpHeadersFilter(servletContext, disps);
-//        }
-//        if (env.acceptsProfiles(Profiles.of(JHipsterConstants.SPRING_PROFILE_DEVELOPMENT))) {
-//            initH2Console(servletContext);
-//        }
 
-        log.info("Web application fully configured")
+
     }
 
 
     @Override
     void customize(WebServerFactory server) {
-//        setMimeMappings(server);
-//         When running in an IDE or with ./gradlew bootRun, set location of the static web assets.
-//        setLocationForStaticAssets(server);
+        setMimeMappings(server)
+        setLocationForStaticAssets(server)
     }
 
-//    private void setMimeMappings(WebServerFactory server) {
-//        if (server instanceof ConfigurableServletWebServerFactory) {
-//            MimeMappings mappings = new MimeMappings(MimeMappings.DEFAULT);
-//             IE issue, see https://github.com/jhipster/generator-jhipster/pull/711
-//            mappings.add("html", MediaType.TEXT_HTML_VALUE + ";charset=" + StandardCharsets.UTF_8.name().toLowerCase());
-//             CloudFoundry issue, see https://github.com/cloudfoundry/gorouter/issues/64
-//            mappings.add("json", MediaType.TEXT_HTML_VALUE + ";charset=" + StandardCharsets.UTF_8.name().toLowerCase());
-//            ConfigurableServletWebServerFactory servletWebServer = (ConfigurableServletWebServerFactory) server;
-//            servletWebServer.setMimeMappings(mappings);
-//        }
-//    }
+    private void setMimeMappings(WebServerFactory server) {
+        if (server instanceof ConfigurableServletWebServerFactory) {
+            MimeMappings mappings = new MimeMappings(MimeMappings.DEFAULT)
+            mappings.add("html", MediaType.TEXT_HTML_VALUE + ";charset=" + StandardCharsets.UTF_8.name().toLowerCase())
+            mappings.add("json", MediaType.TEXT_HTML_VALUE + ";charset=" + StandardCharsets.UTF_8.name().toLowerCase())
+            ConfigurableServletWebServerFactory servletWebServer = (ConfigurableServletWebServerFactory) server
+            servletWebServer.setMimeMappings(mappings)
+        }
+    }
 
-//    private void setLocationForStaticAssets(WebServerFactory server) {
-//        if (server instanceof ConfigurableServletWebServerFactory) {
-//            ConfigurableServletWebServerFactory servletWebServer = (ConfigurableServletWebServerFactory) server;
-//            File root;
-//            String prefixPath = resolvePathPrefix();
-//            root = new File(prefixPath + "build/resources/main/static/");
-//            if (root.exists() && root.isDirectory()) {
-//                servletWebServer.setDocumentRoot(root);
-//            }
-//        }
-//    }
+    private void setLocationForStaticAssets(WebServerFactory server) {
+        if (server instanceof ConfigurableServletWebServerFactory) {
+            ConfigurableServletWebServerFactory servletWebServer =
+                    server as ConfigurableServletWebServerFactory
+            File root = new File(resolvePathPrefix()
+                    + "build/resources/main/static/")
+            if (root.exists() && root.directory) {
+                servletWebServer.documentRoot = root
+            }
+        }
+    }
 
+    /**
+     * Resolve path prefix to static resources.
+     */
+    private String resolvePathPrefix() {
+        String fullExecutablePath
+        try {
+            fullExecutablePath = decode(this.class.getResource("").path, StandardCharsets.UTF_8.name())
+        } catch (UnsupportedEncodingException e) {
+            /* try without decoding if this ever happens */
+            fullExecutablePath = this.class.getResource("").path
+        }
+        String rootPath = Paths.get(".").toUri().normalize().getPath()
+        String extractedPath = fullExecutablePath.replace(rootPath, "")
+        int extractionEndIndex = extractedPath.indexOf("build/")
+        if (extractionEndIndex <= 0) {
+            return ""
+        }
+        return extractedPath.substring(0, extractionEndIndex)
+    }
 
-//    private String resolvePathPrefix() {
-//        String fullExecutablePath;
-//        try {
-//            fullExecutablePath = decode(this.getClass().getResource("").getPath(), StandardCharsets.UTF_8.name());
-//        } catch (UnsupportedEncodingException e) {
-//            /* try without decoding if this ever happens */
-//            fullExecutablePath = this.getClass().getResource("").getPath();
-//        }
-//        String rootPath = Paths.get(".").toUri().normalize().getPath();
-//        String extractedPath = fullExecutablePath.replace(rootPath, "");
-//        int extractionEndIndex = extractedPath.indexOf("build/");
-//        if (extractionEndIndex <= 0) {
-//            return "";
-//        }
-//        return extractedPath.substring(0, extractionEndIndex);
-//    }
+    /**
+     * Initializes the caching HTTP Headers Filter.
+     */
+    private void initCachingHttpHeadersFilter(ServletContext servletContext,
+                                              EnumSet<DispatcherType> disps) {
+        log.debug("Registering Caching HTTP Headers Filter")
+        FilterRegistration.Dynamic cachingHttpHeadersFilter =
+                servletContext.addFilter("cachingHttpHeadersFilter",
+                        new CachingHttpHeadersFilter(properties: properties))
 
-
-//    private void initCachingHttpHeadersFilter(ServletContext servletContext,
-//                                              EnumSet<DispatcherType> disps) {
-//        log.debug("Registering Caching HTTP Headers Filter");
-//        FilterRegistration.Dynamic cachingHttpHeadersFilter =
-//            servletContext.addFilter("cachingHttpHeadersFilter",
-//                new CachingHttpHeadersFilter(fiberDefaults));
-//
-//        cachingHttpHeadersFilter.addMappingForUrlPatterns(disps, true, "/i18n/*");
-//        cachingHttpHeadersFilter.addMappingForUrlPatterns(disps, true, "/content/*");
-//        cachingHttpHeadersFilter.addMappingForUrlPatterns(disps, true, "/app/*");
-//        cachingHttpHeadersFilter.setAsyncSupported(true);
-//    }
-
-//    @Bean
-//    CorsFilter corsFilter() {
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource()
-//        CorsConfiguration config = fiberDefaults.cors
-//        if (config.allowedOrigins != null && !config.allowedOrigins.empty) {
-//            log.debug("Registering CORS filter")
-//            source.registerCorsConfiguration("/api/**", config)
-//            source.registerCorsConfiguration("/management/**", config)
-//            source.registerCorsConfiguration("/v2/api-docs", config)
-//        }
-//        new CorsFilter(source)
-//    }
-
-
+        cachingHttpHeadersFilter.addMappingForUrlPatterns(disps, true, "/i18n/*")
+        cachingHttpHeadersFilter.addMappingForUrlPatterns(disps, true, "/content/*")
+        cachingHttpHeadersFilter.addMappingForUrlPatterns(disps, true, "/app/*")
+        cachingHttpHeadersFilter.setAsyncSupported(true)
+    }
 }

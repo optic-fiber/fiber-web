@@ -11,14 +11,10 @@ class JWTConfigurer extends SecurityConfigurerAdapter<DefaultSecurityFilterChain
 
     TokenProvider tokenProvider
 
-    JWTConfigurer(TokenProvider provider) {
-        tokenProvider = provider
-    }
-
     @Override
     void configure(HttpSecurity http) throws Exception {
         http.addFilterBefore(
-                new JWTFilter(tokenProvider),
+                new JWTFilter(tokenProvider:tokenProvider),
                 UsernamePasswordAuthenticationFilter.class)
     }
 }

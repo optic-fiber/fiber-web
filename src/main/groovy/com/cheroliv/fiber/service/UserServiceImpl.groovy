@@ -36,13 +36,13 @@ import java.util.stream.Collectors
 class UserServiceImpl implements UserService {
 
     @Autowired
-    final UserRepository userRepository
+    UserRepository userRepository
     @Autowired
-    final PasswordEncoder passwordEncoder
+    PasswordEncoder passwordEncoder
     @Autowired
-    final AuthorityRepository authorityRepository
+    AuthorityRepository authorityRepository
     @Autowired
-    final CacheManager cacheManager
+    CacheManager cacheManager
 
 
     Optional<User> activateRegistration(String key) {
@@ -52,8 +52,8 @@ class UserServiceImpl implements UserService {
                     @Override
                     User apply(User user) {
                         // activate given user for the registration key.
-                        user.setActivated(true)
-                        user.setActivationKey(null)
+                        user.activated = true
+                        user.activationKey = null
                         UserServiceImpl.this.clearUserCaches(user)
                         log.debug("Activated user: {}", user)
                         return user
@@ -67,15 +67,15 @@ class UserServiceImpl implements UserService {
                 .filter(new Predicate<User>() {
                     @Override
                     boolean test(User user) {
-                        return user.getResetDate().isAfter(Instant.now().minusSeconds(86400))
+                        return user.resetDate.isAfter(Instant.now().minusSeconds(86400))
                     }
                 })
                 .map(new Function<User, User>() {
                     @Override
                     User apply(User user) {
-                        user.setPassword(passwordEncoder.encode(newPassword))
-                        user.setResetKey(null)
-                        user.setResetDate(null)
+                        user.password = passwordEncoder.encode(newPassword)
+                        user.resetKey = null
+                        user.resetDate = null
                         UserServiceImpl.this.clearUserCaches(user)
                         return user
                     }
@@ -87,14 +87,14 @@ class UserServiceImpl implements UserService {
                 .filter(new Predicate<User>() {
                     @Override
                     boolean test(User user) {
-                        return user.getActivated()
+                        return user.activated
                     }
                 })
                 .map(new Function<User, User>() {
                     @Override
                     User apply(User user) {
-                        user.setResetKey(SecurityUtils.generateResetKey())
-                        user.setResetDate(Instant.now())
+                        user.resetKey = SecurityUtils.generateResetKey()
+                        user.resetDate = Instant.now()
                         UserServiceImpl.this.clearUserCaches(user)
                         return user
                     }
@@ -111,7 +111,7 @@ class UserServiceImpl implements UserService {
                 }
             }
         })
-        userRepository.findOneByEmailIgnoreCase(userDTO.getEmail()).ifPresent(new Consumer<User>() {
+        userRepository.findOneByEmailIgnoreCase(userDTO.email).ifPresent(new Consumer<User>() {
             @Override
             void accept(User existingUser) {
                 boolean removed = UserServiceImpl.this.removeNonActivatedUser(existingUser)
@@ -122,17 +122,14 @@ class UserServiceImpl implements UserService {
         })
         User newUser = new User()
         String encryptedPassword = passwordEncoder.encode(password)
-        newUser.setLogin(userDTO.getLogin().toLowerCase())
-        // new user gets initially a generated password
-        newUser.setPassword(encryptedPassword)
-        newUser.setFirstName(userDTO.getFirstName())
-        newUser.setLastName(userDTO.getLastName())
-        newUser.setEmail(userDTO.getEmail().toLowerCase())
-        newUser.setImageUrl(userDTO.getImageUrl())
-        newUser.setLangKey(userDTO.getLangKey())
-        // new user is not active
-        newUser.setActivated(false)
-        // new user gets registration key
+        newUser.login = userDTO.login.toLowerCase()
+        newUser.password = encryptedPassword
+        newUser.firstName = userDTO.firstName
+        newUser.lastName = userDTO.lastName
+        newUser.email = userDTO.email.toLowerCase()
+        newUser.imageUrl = userDTO.imageUrl
+        newUser.langKey = userDTO.langKey
+        newUser.activated = false
         newUser.setActivationKey(SecurityUtils.generateActivationKey())
         Set<Authority> authorities = new HashSet<>()
         authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(new Consumer<Authority>() {
@@ -141,7 +138,7 @@ class UserServiceImpl implements UserService {
                 authorities.add(e)
             }
         })
-        newUser.setAuthorities(authorities)
+        newUser.authorities = authorities
         userRepository.save(newUser)
         this.clearUserCaches(newUser)
         log.debug("Created Information for User: {}", newUser)
@@ -149,26 +146,26 @@ class UserServiceImpl implements UserService {
     }
 
     private boolean removeNonActivatedUser(User existingUser) {
-        if (existingUser.getActivated()) {
+        if (existingUser.activated) {
             return false
         }
         userRepository.delete(existingUser)
         userRepository.flush()
         this.clearUserCaches(existingUser)
-        return true
+        true
     }
 
     User createUser(UserDTO userDTO) {
         User user = new User()
-        user.setLogin(userDTO.getLogin().toLowerCase())
-        user.setFirstName(userDTO.getFirstName())
-        user.setLastName(userDTO.getLastName())
-        user.setEmail(userDTO.getEmail().toLowerCase())
-        user.setImageUrl(userDTO.getImageUrl())
-        if (userDTO.getLangKey() == null) {
-            user.setLangKey(User.DEFAULT_LANGUAGE) // default language
+        user.login = userDTO.login.toLowerCase()
+        user.firstName = userDTO.firstName
+        user.lastName = userDTO.lastName
+        user.email = userDTO.email.toLowerCase()
+        user.imageUrl = userDTO.imageUrl
+        if (userDTO.langKey == null) {
+            user.langKey = User.DEFAULT_LANGUAGE // default language
         } else {
-            user.setLangKey(userDTO.getLangKey())
+            user.langKey = userDTO.langKey
         }
         String encryptedPassword = passwordEncoder.encode(SecurityUtils.generatePassword())
         user.setPassword(encryptedPassword)
@@ -192,17 +189,9 @@ class UserServiceImpl implements UserService {
         return user
     }
 
-    /**
-     * Update basic information (first name, last name, email, language) for the current user.
-     *
-     * @param firstName first name of user.
-     * @param lastName last name of user.
-     * @param email email id of user.
-     * @param langKey language key.
-     * @param imageUrl image URL of user.
-     */
+
     void updateUser(String firstName, String lastName, String email, String langKey, String imageUrl) {
-        SecurityUtils.getCurrentUserLogin()
+        SecurityUtils.currentUserLogin
                 .flatMap(new Function<String, Optional<? extends User>>() {
                     @Override
                     Optional<? extends User> apply(String login) {
@@ -223,12 +212,7 @@ class UserServiceImpl implements UserService {
                 })
     }
 
-    /**
-     * Update all information for a specific user, and return the modified user.
-     *
-     * @param userDTO user to update.
-     * @return updated user.
-     */
+
     Optional<UserDTO> updateUser(UserDTO userDTO) {
         return Optional.of(userRepository
                 .findById(userDTO.getId()))
@@ -289,7 +273,7 @@ class UserServiceImpl implements UserService {
     }
 
     void changePassword(String currentClearTextPassword, String newPassword) {
-        SecurityUtils.getCurrentUserLogin()
+        SecurityUtils.currentUserLogin
                 .flatMap(new Function<String, Optional<? extends User>>() {
                     @Override
                     Optional<? extends User> apply(String login) {
@@ -333,7 +317,7 @@ class UserServiceImpl implements UserService {
 
     @Transactional(readOnly = true)
     Optional<User> getUserWithAuthorities() {
-        return SecurityUtils.getCurrentUserLogin().flatMap(new Function<String, Optional<? extends User>>() {
+        return SecurityUtils.currentUserLogin.flatMap(new Function<String, Optional<? extends User>>() {
             @Override
             Optional<? extends User> apply(String login) {
                 return userRepository.findOneWithAuthoritiesByLogin(login)

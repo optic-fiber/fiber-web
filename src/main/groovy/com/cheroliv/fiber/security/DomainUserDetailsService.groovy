@@ -6,6 +6,7 @@ import com.cheroliv.fiber.repository.UserRepository
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
@@ -25,12 +26,8 @@ import java.util.stream.Collectors
 @Component("userDetailsService")
 class DomainUserDetailsService implements UserDetailsService {
 
-
-    final UserRepository userRepository
-
-    DomainUserDetailsService(UserRepository userRepository) {
-        this.userRepository = userRepository
-    }
+    @Autowired
+    UserRepository userRepository
 
     @Override
     @Transactional
@@ -78,12 +75,12 @@ class DomainUserDetailsService implements UserDetailsService {
                 .map(new Function<Authority, SimpleGrantedAuthority>() {
                     @Override
                     SimpleGrantedAuthority apply(Authority authority) {
-                        new SimpleGrantedAuthority(authority.getName())
+                        new SimpleGrantedAuthority(authority.name)
                     }
                 })
                 .collect(Collectors.toList() as Collector<? super SimpleGrantedAuthority, ?, List<GrantedAuthority>>)
-        new org.springframework.security.core.userdetails.User(user.getLogin(),
-                user.getPassword(),
+        new org.springframework.security.core.userdetails.User(user.login,
+                user.password,
                 grantedAuthorities)
     }
 }
