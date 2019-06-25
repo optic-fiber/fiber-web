@@ -26,8 +26,12 @@ import java.util.stream.Collectors
 @Component("userDetailsService")
 class DomainUserDetailsService implements UserDetailsService {
 
+    final UserRepository userRepository
+
     @Autowired
-    UserRepository userRepository
+    DomainUserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository
+    }
 
     @Override
     @Transactional

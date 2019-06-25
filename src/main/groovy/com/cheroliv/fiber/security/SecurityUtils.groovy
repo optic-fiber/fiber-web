@@ -11,9 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails
 import java.util.function.Function
 import java.util.function.Predicate
 
-/**
- * Utility class for Spring Security.
- */
+
 @CompileStatic
 final class SecurityUtils {
     static final int DEF_COUNT = 20

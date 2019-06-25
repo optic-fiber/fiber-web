@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.RestController
 
 @Slf4j
 @CompileStatic
-@RestController
-@RequestMapping
+//@RestController
+//@RequestMapping
 class InterController {
 
-    @RequestMapping("inters")
+//    @RequestMapping("inters")
     String add() {
         "add inter"
     }

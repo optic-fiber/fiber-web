@@ -26,19 +26,27 @@ import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 @Import(SecurityProblemSupport.class)
 class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+    final TokenProvider tokenProvider
+    final CorsFilter corsFilter
+    final SecurityProblemSupport problemSupport
+
     @Autowired
-    TokenProvider tokenProvider
-    @Autowired
-    CorsFilter corsFilter
-    @Autowired
-    SecurityProblemSupport problemSupport
+    SecurityConfiguration(TokenProvider tokenProvider,
+                          CorsFilter corsFilter,
+                          SecurityProblemSupport problemSupport) {
+        this.tokenProvider = tokenProvider
+        this.corsFilter = corsFilter
+        this.problemSupport = problemSupport
+    }
 
     @Bean
     PasswordEncoder passwordEncoder() {
         new BCryptPasswordEncoder()
     }
 
-    @Override@CompileStatic
+    @Override
+    @CompileStatic
     void configure(WebSecurity web) throws Exception {
         web.ignoring()
                 .antMatchers(HttpMethod.OPTIONS, "/**")
@@ -49,7 +57,6 @@ class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     void configure(HttpSecurity http) throws Exception {
-
         http.csrf().disable()
 
         http.addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
@@ -99,7 +106,7 @@ class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         http.httpBasic()
 
-        http.apply(new JWTConfigurer(tokenProvider: tokenProvider))
+        http.apply(new JWTConfigurer(tokenProvider))
 
     }
 

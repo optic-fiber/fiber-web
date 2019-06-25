@@ -7,6 +7,7 @@ import io.jsonwebtoken.*
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.InitializingBean
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
@@ -23,13 +24,18 @@ import java.security.Key
 @CompileStatic
 @Component
 class TokenProvider implements InitializingBean {
-    @Value('${fiber.security.authentication.jwt.base64-secret}')
-    String base64Secret
+    final String base64Secret
     static final String AUTHORITIES_KEY = "auth"
     Key key
     long tokenValidityInMilliseconds
     long tokenValidityInMillisecondsForRememberMe
     FiberProperties properties = FiberProperties.instance
+
+    @Autowired
+    TokenProvider(@Value('${fiber.security.authentication.jwt.base64-secret}')
+                          String base64Secret) {
+        this.base64Secret = base64Secret
+    }
 
     @Override
     void afterPropertiesSet() throws Exception {

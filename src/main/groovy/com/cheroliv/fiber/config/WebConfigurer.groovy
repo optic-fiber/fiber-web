@@ -14,6 +14,8 @@ import org.springframework.http.MediaType
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 import org.springframework.web.filter.CorsFilter
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 import javax.servlet.DispatcherType
 import javax.servlet.FilterRegistration
@@ -27,11 +29,18 @@ import static java.net.URLDecoder.decode
 @Slf4j
 @CompileStatic
 @Configuration
-class WebConfigurer implements ServletContextInitializer, WebServerFactoryCustomizer<WebServerFactory> {
+class WebConfigurer implements ServletContextInitializer, WebServerFactoryCustomizer<WebServerFactory>, WebMvcConfigurer {
 
-    FiberProperties properties = FiberProperties.instance
+    final FiberProperties properties = FiberProperties.instance
 
+    @Override
+     void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("swagger-ui.html")
+                .addResourceLocations("classpath:/META-INF/resources/");
 
+        registry.addResourceHandler("/webjars/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/");
+    }
 
     @Bean
     CorsFilter corsFilter() {

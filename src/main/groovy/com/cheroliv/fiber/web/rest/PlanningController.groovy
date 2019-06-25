@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @Slf4j
 @CompileStatic
-@RestController
-@RequestMapping("planning")
+//@RestController
+//@RequestMapping("planning")
 class PlanningController {
 }

@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.RestController
 
 @Slf4j
 @CompileStatic
-@RestController
-@RequestMapping("fiber")
+//@RestController
+//@RequestMapping("fiber")
 class FiberController {
-    @RequestMapping(
-            value = "home",
-            method = RequestMethod.GET)
+//    @RequestMapping(
+//            value = "home",
+//            method = RequestMethod.GET)
     String home() {
         "Hello World!"
     }

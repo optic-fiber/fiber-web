@@ -15,12 +15,19 @@ import javax.transaction.Transactional
 
 @Component
 class DatabaseInitializer {
+    final UserService userService
+    final AuthorityRepository authorityRepository
+    final UserRepository userRepository
+
     @Autowired
-    UserService userService
-    @Autowired
-    AuthorityRepository authorityRepository
-    @Autowired
-    UserRepository userRepository
+    DatabaseInitializer(UserService userService,
+                        AuthorityRepository authorityRepository,
+                        UserRepository userRepository) {
+        this.userService = userService
+        this.authorityRepository = authorityRepository
+        this.userRepository = userRepository
+    }
+
 
     @PostConstruct
     @Transactional
