@@ -42,42 +42,4 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2
 @Import([FeignClientsConfiguration.class,
         SecurityConfiguration.class])
 class Config {
-
-
-//    @Bean
-//    Validator validator() {
-//        new LocalValidatorFactoryBean()
-//    }
-//
-//    @Bean
-//    DataSource dataSource() {
-//        new DriverManagerDataSource(
-//                driverClassName: "org.postgresql.Driver",
-//                url: "jdbc:postgresql://localhost:5432/fiber",
-//                username: "tech",
-//                password: "tech")
-//    }
-//
-//    @Bean
-//    LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-//        LocalContainerEntityManagerFactoryBean emf =
-//                new LocalContainerEntityManagerFactoryBean(
-//                        jpaVendorAdapter: jpaVendorAdapter(),
-//                        dataSource: dataSource())
-//        emf.setPackagesToScan("com.cheroliv.fiber.domain")
-//        emf
-//    }
-//
-//    @Bean
-//    JpaVendorAdapter jpaVendorAdapter() {
-//        new HibernateJpaVendorAdapter(
-//                showSql: true,
-//                generateDdl: true,
-//                database: Database.POSTGRESQL)
-//    }
-//
-//    @Bean
-//    PlatformTransactionManager transactionManager() {
-//        new JpaTransactionManager()
-//    }
 }
