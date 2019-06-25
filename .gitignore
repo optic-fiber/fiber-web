@@ -39,3 +39,4 @@ data/.~lock.*
 local.properties
 _src/*
 /misc/*
+fiberwebKey.jks

@@ -1,7 +1,6 @@
 package com.cheroliv.fiber.service
 
 import com.cheroliv.fiber.repository.PlanningRepository
-import com.cheroliv.fiber.service.PlanningService
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
