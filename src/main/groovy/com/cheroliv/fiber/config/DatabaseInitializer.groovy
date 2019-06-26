@@ -21,6 +21,7 @@ import java.time.ZonedDateTime
 
 @Slf4j
 @CompileStatic
+@Transactional
 @Component
 class DatabaseInitializer {
     final UserService userService
@@ -39,7 +40,12 @@ class DatabaseInitializer {
         this.planningRepository = planningRepository
     }
 
-    @Transactional
+    @PostConstruct
+    void InitializeDatabase(){
+        createDefaultAuth()
+        createDefaultUsers()
+    }
+
     void createDefaultPlanning() {
         planningRepository.save new Planning(
                 user: userRepository.findOneByLogin("user")?.get(),
@@ -50,21 +56,16 @@ class DatabaseInitializer {
                 lastNameTech: "user")
     }
 
-
-    @Transactional
     void createDefaultAuth(){
-
-    }
-    @PostConstruct
-    @Transactional
-    void createDefaultUsers() {
         if (!authorityRepository.findById(AuthoritiesConstants.USER).present)
             authorityRepository.save(new Authority(name: AuthoritiesConstants.USER))
         if (!authorityRepository.findById(AuthoritiesConstants.ADMIN).present)
             authorityRepository.save(new Authority(name: AuthoritiesConstants.ADMIN))
         if (!authorityRepository.findById(AuthoritiesConstants.ANONYMOUS).present)
             authorityRepository.save(new Authority(name: AuthoritiesConstants.ANONYMOUS))
+    }
 
+    void createDefaultUsers() {
         Optional<User> optionalAdminUser = userService.getUserWithAuthoritiesByLogin "admin"
         if (!optionalAdminUser.present) {
             userService.registerUser(new UserDTO(new User(
