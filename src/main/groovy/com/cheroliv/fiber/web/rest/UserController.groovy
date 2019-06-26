@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("users")
 class UserController {
+
     final UserService userService
     final DomainUserDetailsService userDetailsService
 

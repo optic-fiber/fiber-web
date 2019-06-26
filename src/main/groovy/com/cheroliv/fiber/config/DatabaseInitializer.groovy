@@ -1,34 +1,60 @@
 package com.cheroliv.fiber.config
 
 import com.cheroliv.fiber.domain.Authority
+import com.cheroliv.fiber.domain.Planning
 import com.cheroliv.fiber.domain.User
 import com.cheroliv.fiber.repository.AuthorityRepository
+import com.cheroliv.fiber.repository.PlanningRepository
 import com.cheroliv.fiber.repository.UserRepository
 import com.cheroliv.fiber.security.AuthoritiesConstants
 import com.cheroliv.fiber.security.UserDTO
 import com.cheroliv.fiber.service.UserService
+import groovy.transform.CompileStatic
+import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 import javax.annotation.PostConstruct
 import javax.transaction.Transactional
+import java.time.ZoneId
+import java.time.ZonedDateTime
 
+@Slf4j
+@CompileStatic
 @Component
 class DatabaseInitializer {
     final UserService userService
     final AuthorityRepository authorityRepository
     final UserRepository userRepository
+    final PlanningRepository planningRepository
 
     @Autowired
     DatabaseInitializer(UserService userService,
                         AuthorityRepository authorityRepository,
-                        UserRepository userRepository) {
+                        UserRepository userRepository,
+                        PlanningRepository planningRepository) {
         this.userService = userService
         this.authorityRepository = authorityRepository
         this.userRepository = userRepository
+        this.planningRepository = planningRepository
+    }
+
+    @Transactional
+    void createDefaultPlanning() {
+        planningRepository.save new Planning(
+                user: userRepository.findOneByLogin("user")?.get(),
+                dateTimeCreation: ZonedDateTime.now(ZoneId.of("Europe/Paris")),
+                initialTech: "UU",
+                open: Boolean.TRUE,
+                firstNameTech: "user",
+                lastNameTech: "user")
     }
 
 
+    @Transactional
+    void createDefaultAuth(){
+
+    }
     @PostConstruct
     @Transactional
     void createDefaultUsers() {
@@ -49,8 +75,10 @@ class DatabaseInitializer {
                     "admin")
             User user = userRepository.findOneByLogin("admin")?.get()
             user.activated = true
-            user.authorities = [authorityRepository.findById(AuthoritiesConstants.USER)?.get(),
-                                authorityRepository.findById(AuthoritiesConstants.ADMIN)?.get()] as Set
+            user.authorities = [
+                    authorityRepository.findById(AuthoritiesConstants.USER)?.get(),
+                    authorityRepository.findById(AuthoritiesConstants.ADMIN)?.get()
+            ] as Set
             userRepository.save(user)
         }
         Optional<User> optionalUser = userService.getUserWithAuthoritiesByLogin("user")
@@ -63,8 +91,11 @@ class DatabaseInitializer {
                     "user")
             User user = userRepository.findOneByLogin("user")?.get()
             user.activated = true
-            user.authorities = [authorityRepository.findById(AuthoritiesConstants.USER)?.get()] as Set
+            user.authorities = [
+                    authorityRepository.findById(AuthoritiesConstants.USER)?.get()
+            ] as Set
             userRepository.save(user)
+            createDefaultPlanning()
         }
         Optional<User> optionalSystemUser = userService.getUserWithAuthoritiesByLogin("system")
         if (!optionalSystemUser.present) {
@@ -93,6 +124,5 @@ class DatabaseInitializer {
             user.authorities = [] as Set
             userRepository.save(user)
         }
-
     }
 }

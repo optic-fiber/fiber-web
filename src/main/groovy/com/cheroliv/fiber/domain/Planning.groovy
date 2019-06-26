@@ -11,7 +11,7 @@ import java.time.ZonedDateTime
 @CompileStatic
 @ToString
 @Entity
-@Table(name = "`planning`",indexes = [
+@Table(name = "`planning`", indexes = [
         @Index(name = "`idx_planning_initial_tech`", columnList = "`initial_tech`"),
         @Index(name = "`idx_planning_open`", columnList = "`open`"),
         @Index(name = "`idx_planning_date_time_creation`", columnList = "`date_time_creation`"),
@@ -20,28 +20,30 @@ import java.time.ZonedDateTime
 class Planning implements Serializable {
     static final long serialVersionUID = 1L
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,
+            generator = "sequenceGenerator")
+    @SequenceGenerator(name = "sequenceGenerator")
     @Column(name = "`id`")
     Long id
     @NotNull
-    @Size(min = 4)
-    @Column(name="`initial_tech`",nullable = false)
+    @Size(min = 2)
+    @Column(name = "`initial_tech`", nullable = false)
     String initialTech
     @NotNull
-    @Column(name="`open`",nullable = false)
+    @Column(name = "`open`", nullable = false)
     Boolean open
     @NotNull
-    @Column(name="`date_time_creation`")
+    @Column(name = "`date_time_creation`")
     ZonedDateTime dateTimeCreation
     @Size(max = 100)
-    @Column(name="`last_name_tech`",length = 100)
+    @Column(name = "`last_name_tech`", length = 100)
     String lastNameTech
     @Size(max = 100)
-    @Column(name="`first_name_tech`",length = 100)
+    @Column(name = "`first_name_tech`", length = 100)
     String firstNameTech
     @NotNull
-    @OneToOne(optional = false)
-    @JoinColumn(name = "`id`", nullable = false)
-    @MapsId
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "`user_id`", nullable = false)
     User user
 
     boolean equals(o) {
