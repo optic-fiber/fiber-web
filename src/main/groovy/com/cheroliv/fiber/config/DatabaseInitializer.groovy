@@ -41,7 +41,7 @@ class DatabaseInitializer {
     }
 
     @PostConstruct
-    void InitializeDatabase(){
+    void InitializeDatabase() {
         createDefaultAuth()
         createDefaultUsers()
     }
@@ -56,7 +56,7 @@ class DatabaseInitializer {
                 lastNameTech: "user")
     }
 
-    void createDefaultAuth(){
+    void createDefaultAuth() {
         if (!authorityRepository.findById(AuthoritiesConstants.USER).present)
             authorityRepository.save(new Authority(name: AuthoritiesConstants.USER))
         if (!authorityRepository.findById(AuthoritiesConstants.ADMIN).present)

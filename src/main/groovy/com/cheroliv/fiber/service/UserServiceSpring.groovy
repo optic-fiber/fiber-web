@@ -49,7 +49,6 @@ class UserServiceSpring implements UserService {
         this.passwordEncoder = passwordEncoder
         this.authorityRepository = authorityRepository
         this.cacheManager = cacheManager
-
     }
 
 
@@ -150,7 +149,7 @@ class UserServiceSpring implements UserService {
         userRepository.save(newUser)
         this.clearUserCaches(newUser)
         log.debug("Created Information for User: {}", newUser)
-        return newUser
+        newUser
     }
 
     private boolean removeNonActivatedUser(User existingUser) {

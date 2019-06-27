@@ -4,6 +4,7 @@ import com.cheroliv.fiber.security.AuthoritiesConstants
 import com.cheroliv.fiber.security.JWTConfigurer
 import com.cheroliv.fiber.security.TokenProvider
 import groovy.transform.CompileStatic
+import groovy.transform.TypeCheckingMode
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Import
@@ -21,7 +22,7 @@ import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWrite
 import org.springframework.web.filter.CorsFilter
 import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport
 
-
+@CompileStatic
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 @Import(SecurityProblemSupport.class)
@@ -29,15 +30,15 @@ class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     final TokenProvider tokenProvider
     final CorsFilter corsFilter
-    final SecurityProblemSupport problemSupport
+    final SecurityProblemSupport securityProblemSupport
 
     @Autowired
     SecurityConfiguration(TokenProvider tokenProvider,
                           CorsFilter corsFilter,
-                          SecurityProblemSupport problemSupport) {
+                          SecurityProblemSupport securityProblemSupport) {
         this.tokenProvider = tokenProvider
         this.corsFilter = corsFilter
-        this.problemSupport = problemSupport
+        this.securityProblemSupport = securityProblemSupport
     }
 
     @Bean
@@ -46,7 +47,6 @@ class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    @CompileStatic
     void configure(WebSecurity web) throws Exception {
         web.ignoring()
                 .antMatchers(HttpMethod.OPTIONS, "/**")
@@ -54,15 +54,15 @@ class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/test/**")
     }
 
-
+    @CompileStatic(value = TypeCheckingMode.SKIP)
     @Override
     void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
 
         http.addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling()
-                .authenticationEntryPoint(problemSupport)
-                .accessDeniedHandler(problemSupport)
+                .authenticationEntryPoint(securityProblemSupport)
+                .accessDeniedHandler(securityProblemSupport)
 
         http.headers()
                 .contentSecurityPolicy(

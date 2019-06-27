@@ -50,7 +50,7 @@ class User implements Serializable {
 
     @JsonIgnore
     @NotNull
-//    @Size(min = 60, max = 60)
+    @Size(min = 60, max = 60)
     @Column(name = "`password_hash`",
             length = 60, nullable = false)
     String password

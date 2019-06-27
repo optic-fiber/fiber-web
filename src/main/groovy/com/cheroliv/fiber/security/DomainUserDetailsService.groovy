@@ -2,6 +2,7 @@ package com.cheroliv.fiber.security
 
 import com.cheroliv.fiber.domain.Authority
 import com.cheroliv.fiber.domain.User
+import com.cheroliv.fiber.exceptions.UserNotActivatedException
 import com.cheroliv.fiber.repository.UserRepository
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j

@@ -2,58 +2,46 @@ package com.cheroliv.fiber.domain
 
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.junit.jupiter.SpringExtension
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean
 
+import javax.validation.ConstraintViolation
+import javax.validation.Validation
 import javax.validation.Validator
 
 @Slf4j
 @CompileStatic
-@SpringBootTest
-@ExtendWith(SpringExtension.class)
 class InterTest {
 
+    static Validator validator
 
-    @Autowired
-    Validator validator
-
-    @Test
-    @DisplayName("Test Spring Validator injection")
-    void testValidator() {
-        assert validator.class.name == LocalValidatorFactoryBean.class.name
+    @BeforeAll
+    static void setUpValidator() {
+        validator = Validation.buildDefaultValidatorFactory().validator
     }
 
-//    static Integer interFieldMapSize = 7
-//    static Validator validator
-//
-//
-//    @BeforeAll
-//    static void setUpValidator() {
-//        validator = buildDefaultValidatorFactory().validator
-//    }
+    static Integer interFieldMapSize = 7
 
-//    @Test
-//    @DisplayName("InterTest.testTimeStringToInteger")
-//    void testTimeStringToInteger() {
-//        Integer[] heures =
-//                [9, 13, 8, 9, 8,
-//                 12, 12, 8, 13, 15]
-//        String[] strHeures = [
-//                "09:00:00", "13:00:00",
-//                "08:00:00", "09:00:00",
-//                "08:00:00", "12:00:00",
-//                "12:00:00", "08:00:00",
-//                "13:00:00", "15:00:00"]
-//        strHeures.eachWithIndex { it, idx ->
-//            assertEquals timeStringToInteger(it), heures[idx]
-//        }
-//
-//    }
+    @Test
+    @DisplayName("InterTest.testNdSizeConstraint")
+    void testNdSizeConstraint() {
+        Inter inter = new Inter(nd: "101010101")
+        Assertions.assertNotEquals 10, inter.nd.size()
+        Set<ConstraintViolation<Inter>> constraintViolations =
+                validator.validateProperty inter, "nd"
+        Assertions.assertEquals constraintViolations
+                .iterator()
+                .next()
+                .messageTemplate,
+                InterConstants.ND_SIZE_CSTRT_TPL_MSG
+        inter.nd = "0101010101"
+        Assertions.assertEquals inter.nd.size(), 10
+        constraintViolations =
+                validator.validateProperty inter, "nd"
+        Assertions.assertEquals 0, constraintViolations.size()
+    }
 
 //    @ParameterizedTest()
 //    @DisplayName("InterTest.testToArrayString")
@@ -151,25 +139,7 @@ class InterTest {
 //        assertEquals constraintViolations.size(), 0
 //    }
 
-//    @Test
-//    @DisplayName("InterTest.testNdSizeConstraint")
-//    void testNdSizeConstraint() {
-//        Inter inter = new Inter(nd: "101010101")
-//        assertNotEquals inter.nd.size(), 10
-//        Set<ConstraintViolation<Inter>> constraintViolations =
-//                validator.validateProperty inter, "nd"
-//        assertEquals constraintViolations
-//                .iterator()
-//                .next()
-//                .messageTemplate,
-//                SIZE_CSTRT_TEMPLATE_MSG
-//
-//        inter.nd = "0101010101"
-//        assertEquals inter.nd.size(), 10
-//        constraintViolations =
-//                validator.validateProperty inter, "nd"
-//        assertEquals constraintViolations.size(), 0
-//    }
+
 //
 //    @Test
 //    @DisplayName("InterTest.testTypeNotNullConstraint")

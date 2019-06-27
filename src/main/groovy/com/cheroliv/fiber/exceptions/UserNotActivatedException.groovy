@@ -1,4 +1,4 @@
-package com.cheroliv.fiber.security
+package com.cheroliv.fiber.exceptions
 
 import groovy.transform.CompileStatic
 import org.springframework.security.core.AuthenticationException

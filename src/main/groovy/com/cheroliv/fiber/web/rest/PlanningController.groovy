@@ -38,6 +38,17 @@ class PlanningController {
                 .content
     }
 
+
+    @GetMapping("/{login}")
+    Iterable<Planning> getByUser(@PathVariable("login") String login) {
+        planningRepository.findByUserLogin(login,
+                PageRequest.of(0,
+                        10,
+                        Sort.by("dateTimeCreation")
+                                .descending()))
+                .content
+    }
+
     @CompileStatic(value = TypeCheckingMode.SKIP)
     @GetMapping("/{planningId}")
     ResponseEntity<Planning> get(@PathVariable("planningId") Long id) {
@@ -64,16 +75,30 @@ class PlanningController {
     Planning patch(@PathVariable("{planningId}") Long id,
                    @RequestBody Planning patch) {
         Optional<Planning> result = planningRepository.findById(id)
-        //TODO
+        if (result.present) {
+            Planning planning = result.get()
+            if (planning.firstNameTech != null) {
+                planning.firstNameTech = patch.firstNameTech
+            }
+            if (planning.lastNameTech != null) {
+                planning.lastNameTech = patch.lastNameTech
+            }
+            if (planning.initialTech != null) {
+                planning.initialTech = patch.initialTech
+            }
+            if (planning.open != null) {
+                planning.open = patch.open
+            }
+        }
         planningRepository.save(patch)
     }
 
     @DeleteMapping("/{planningId}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
-    void delete(@PathVariable("/{planningId}")Long id) {
-        try{
+    void delete(@PathVariable("/{planningId}") Long id) {
+        try {
             planningRepository.deleteById(id)
-        }catch(EmptyResultDataAccessException e){
+        } catch (EmptyResultDataAccessException e) {
             e.printStackTrace()
         }
     }

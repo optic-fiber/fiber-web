@@ -42,11 +42,8 @@ class UserDTO {
         this.imageUrl = user.getImageUrl()
         this.langKey = user.getLangKey()
         this.createdDate = user.getCreatedDate()
-        Set<String> set = new HashSet<>()
         user.getAuthorities().each { Authority authority ->
-            String name = authority.getName()
-            set.add(name)
+            this.authorities.add(authority.getName())
         }
-        this.authorities = set
     }
 }

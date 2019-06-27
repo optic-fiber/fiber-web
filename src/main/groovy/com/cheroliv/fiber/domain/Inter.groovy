@@ -20,7 +20,7 @@ import java.time.ZonedDateTime
         @Index(name = "`idx_inter_date_time_inter`", columnList = "`date_time_inter`"),
         @Index(name = "`idx_inter_first_name_client`", columnList = "`first_name_client`"),
         @Index(name = "`idx_inter_last_name_client`", columnList = "`last_name_client`")])
-class Inter implements Serializable, InterConstants {
+class Inter implements Serializable{
     static final long serialVersionUID = 1L
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE,
@@ -29,8 +29,8 @@ class Inter implements Serializable, InterConstants {
     @Column(name = "`id`")
     Long id
     @Column(name = "`nd`")
-    @NotNull
-    @Size(min = 10, max = 10)
+    @NotNull(message = InterConstants.ND_NOTNULL_CSTRT_TPL_MSG)
+    @Size(min = 10, max = 10, message = InterConstants.ND_SIZE_CSTRT_TPL_MSG)
     String nd
     @NotNull
     @Enumerated(EnumType.STRING)
