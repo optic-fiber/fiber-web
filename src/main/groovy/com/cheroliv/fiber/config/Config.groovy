@@ -24,14 +24,4 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2
         SecurityConfiguration.class])
 @ComponentScan("com.cheroliv.fiber")
 class Config {
-
-    @Bean
-    Docket api() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .select()
-                .apis(RequestHandlerSelectors.basePackage(InterController.package.toString()))
-                .paths(PathSelectors.any())
-//                .paths(PathSelectors.ant("/fiber-web/*"))
-                .build()
-    }
 }

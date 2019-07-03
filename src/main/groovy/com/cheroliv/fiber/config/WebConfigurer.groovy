@@ -1,6 +1,7 @@
 package com.cheroliv.fiber.config
 
 import com.cheroliv.fiber.web.http.CachingHttpHeadersFilter
+import com.cheroliv.fiber.web.rest.InterController
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import org.springframework.boot.web.server.MimeMappings
@@ -16,6 +17,10 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 import org.springframework.web.filter.CorsFilter
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
+import springfox.documentation.builders.PathSelectors
+import springfox.documentation.builders.RequestHandlerSelectors
+import springfox.documentation.spi.DocumentationType
+import springfox.documentation.spring.web.plugins.Docket
 
 import javax.servlet.DispatcherType
 import javax.servlet.FilterRegistration
@@ -54,7 +59,15 @@ class WebConfigurer implements ServletContextInitializer, WebServerFactoryCustom
         }
         new CorsFilter(source)
     }
-
+    @Bean
+    Docket api() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .select()
+                .apis(RequestHandlerSelectors.basePackage(InterController.package.toString()))
+                .paths(PathSelectors.any())
+        //                .paths(PathSelectors.ant("/fiber-web/*"))
+                .build()
+    }
     @Override
     void onStartup(ServletContext servletContext) throws ServletException {
 

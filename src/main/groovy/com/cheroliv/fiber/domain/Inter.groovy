@@ -2,10 +2,12 @@ package com.cheroliv.fiber.domain
 
 import com.cheroliv.fiber.domain.enumeration.ContractEnum
 import com.cheroliv.fiber.domain.enumeration.TypeInterEnum
+import com.cheroliv.fiber.groups.InterChecks
 import groovy.transform.CompileStatic
 import groovy.transform.ToString
 
 import javax.persistence.*
+import javax.validation.Valid
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 import java.time.ZonedDateTime
@@ -20,7 +22,7 @@ import java.time.ZonedDateTime
         @Index(name = "`idx_inter_date_time_inter`", columnList = "`date_time_inter`"),
         @Index(name = "`idx_inter_first_name_client`", columnList = "`first_name_client`"),
         @Index(name = "`idx_inter_last_name_client`", columnList = "`last_name_client`")])
-class Inter implements Serializable{
+class Inter implements Serializable {
     static final long serialVersionUID = 1L
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE,
@@ -29,26 +31,31 @@ class Inter implements Serializable{
     @Column(name = "`id`")
     Long id
     @Column(name = "`nd`")
-    @NotNull(message = InterConstants.ND_NOTNULL_CSTRT_TPL_MSG)
-    @Size(min = 10, max = 10, message = InterConstants.ND_SIZE_CSTRT_TPL_MSG)
+    @NotNull(message = InterConstants.ND_NOTNULL_CSTRT_TPL_MSG,
+            groups = InterChecks)
+    @Size(min = 10, max = 10,
+            message = InterConstants.ND_SIZE_CSTRT_TPL_MSG,
+            groups = InterChecks)
     String nd
-    @NotNull
+    @NotNull(groups = InterChecks)
     @Enumerated(EnumType.STRING)
     @Column(name = "`type_inter`", nullable = false)
     TypeInterEnum typeInter
-    @NotNull
+    @NotNull(groups = InterChecks)
     @Enumerated(EnumType.STRING)
     @Column(name = "`contract`", nullable = false)
     ContractEnum contract
+    @NotNull(groups = InterChecks)
     @Column(name = "`date_time_inter`")
     ZonedDateTime dateTimeInter
-    @Size(max = 100)
+    @Size(max = 100, groups = InterChecks)
     @Column(name = "`first_name_client`")
     String firstNameClient
-    @Size(max = 100)
+    @Size(max = 100, groups = InterChecks)
     @Column(name = "`last_name_client`")
     String lastNameClient
     @NotNull
+    @Valid
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false, name = "`planning_id`")
     Planning planning

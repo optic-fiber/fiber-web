@@ -1,18 +1,25 @@
 package com.cheroliv.fiber.domain
 
+import com.cheroliv.fiber.domain.enumeration.ContractEnum
+import com.cheroliv.fiber.domain.enumeration.TypeInterEnum
+import com.cheroliv.fiber.groups.InterChecks
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.*
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvFileSource
 
 import javax.validation.ConstraintViolation
 import javax.validation.Validation
 import javax.validation.Validator
+import java.time.LocalDate
+import java.time.LocalTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
 
 @Slf4j
 @CompileStatic
+@TestMethodOrder(MethodOrderer.OrderAnnotation)
 class InterTest {
 
     static Validator validator
@@ -22,51 +29,77 @@ class InterTest {
         validator = Validation.buildDefaultValidatorFactory().validator
     }
 
-    static Integer interFieldMapSize = 7
-
     @Test
+    @Order(1)
     @DisplayName("InterTest.testNdSizeConstraint")
     void testNdSizeConstraint() {
         Inter inter = new Inter(nd: "101010101")
-        Assertions.assertNotEquals 10, inter.nd.size()
+        assert 10 != inter.nd.size()
         Set<ConstraintViolation<Inter>> constraintViolations =
-                validator.validateProperty inter, "nd"
-        Assertions.assertEquals constraintViolations
+                validator.validateProperty inter, "nd", InterChecks
+        assert constraintViolations
                 .iterator()
                 .next()
-                .messageTemplate,
+                .messageTemplate ==
                 InterConstants.ND_SIZE_CSTRT_TPL_MSG
         inter.nd = "0101010101"
-        Assertions.assertEquals inter.nd.size(), 10
+        assert inter.nd.size() == 10
         constraintViolations =
-                validator.validateProperty inter, "nd"
-        Assertions.assertEquals 0, constraintViolations.size()
+                validator.validateProperty inter, "nd", InterChecks
+        assert 0 == constraintViolations.size()
     }
 
-//    @ParameterizedTest()
-//    @DisplayName("InterTest.testToArrayString")
-//    @CsvFileSource(resources = "/inters.csv", numLinesToSkip = 1)
-//    void testToArrayString_ArraySize(Integer id,
-//                                     String nd,
-//                                     String nom,
-//                                     String prenom,
-//                                     String heure,
-//                                     LocalDate date,
-//                                     String contrat,
-//                                     String type) {
-//        Inter interCsv = new Inter(
-//                id: id,
-//                nd: nd,
-//                nom: nom,
-//                prenom: prenom,
-//                heure: parseStringHeureToInteger(heure),
-//                date: date,
-//                contrat: contrat,
-//                type: type)
-//        //taille du tableau est de la taille 7
-//        // cad les champs de Inter sans l'id
-//        assertEquals interFieldMapSize, interCsv.toArrayString().size()
-//    }
+    /**
+     * InterTest :
+     *  test building a valid inter with the CSV file
+     *  get a ZonedDateTime with a LocalDate and a LocalTime
+     *  testing valueOfName method of the enums
+     *  testing InterUtils.getDateTime()
+     *
+     * @param id
+     * @param nd
+     * @param nom
+     * @param prenom
+     * @param heure
+     * @param date
+     * @param contrat
+     * @param type
+     */
+    @Order(2)
+    @ParameterizedTest()
+    @DisplayName("InterTest.testBuildingInterWithCsv")
+    @CsvFileSource(resources = "/inter.csv", numLinesToSkip = 1)
+    void testBuildingInterWithCsv(Integer id,
+                                  String nd,
+                                  String nom,
+                                  String prenom,
+                                  String heure,
+                                  LocalDate date,
+                                  String contrat,
+                                  String type) {
+
+        LocalDate currentLocalDate = date
+        LocalTime currentLocalTime = InterUtils.parseStringHeureToLocalTime(heure)
+        ZonedDateTime currentZonedDateTime = InterUtils.getDateTime(
+                currentLocalDate,
+                currentLocalTime,
+                ZoneId.systemDefault())
+
+        Inter interCsv = new Inter(
+                id: id,
+                nd: nd,
+                lastNameClient: nom,
+                firstNameClient: prenom,
+                dateTimeInter: currentZonedDateTime,
+                contract: ContractEnum.valueOfName(contrat),
+                typeInter: TypeInterEnum.valueOfName(type))
+
+        //invalid! because Planning is null
+        // and belong to the default validation check group
+        assert !validator.validateProperty(interCsv, "planning").empty
+        //correct! because we only validate the inter not the relation
+        assert validator.validate(interCsv, InterChecks).empty
+    }
 //
 //    @ParameterizedTest()
 //    @DisplayName("InterTest.testToArrayString")
