@@ -9,6 +9,7 @@ import org.springframework.boot.web.server.WebServerFactory
 import org.springframework.boot.web.server.WebServerFactoryCustomizer
 import org.springframework.boot.web.servlet.ServletContextInitializer
 import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory
+import org.springframework.cache.annotation.EnableCaching
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.MediaType
@@ -21,6 +22,7 @@ import springfox.documentation.builders.PathSelectors
 import springfox.documentation.builders.RequestHandlerSelectors
 import springfox.documentation.spi.DocumentationType
 import springfox.documentation.spring.web.plugins.Docket
+import springfox.documentation.swagger2.annotations.EnableSwagger2
 
 import javax.servlet.DispatcherType
 import javax.servlet.FilterRegistration
@@ -34,6 +36,8 @@ import static java.net.URLDecoder.decode
 @Slf4j
 @CompileStatic
 @Configuration
+@EnableCaching
+@EnableSwagger2
 class WebConfigurer implements ServletContextInitializer, WebServerFactoryCustomizer<WebServerFactory>, WebMvcConfigurer {
 
     final FiberProperties properties = FiberProperties.instance
