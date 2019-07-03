@@ -17,6 +17,4 @@ class Application {
         log.info "running spring boot"
         SpringApplication.run(Application, args)
     }
-
-
 }
