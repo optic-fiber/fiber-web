@@ -9,12 +9,12 @@ import org.springframework.stereotype.Service
 @Slf4j
 @CompileStatic
 @Service
-class InterServiceSpring implements InterService {
+class InterServiceImpl implements InterService {
 
     final InterRepository interRepository
 
     @Autowired
-    InterServiceSpring(InterRepository interRepository) {
+    InterServiceImpl(InterRepository interRepository) {
         this.interRepository = interRepository
     }
 }

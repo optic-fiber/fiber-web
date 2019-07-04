@@ -86,9 +86,10 @@ class TokenProvider implements InitializingBean {
                 .body
 
         List<SimpleGrantedAuthority> list = new ArrayList<>()
-        claims[AUTHORITIES_KEY].toString().split(",").each { String s ->
-            SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(s)
-            list.add(simpleGrantedAuthority)
+        claims[AUTHORITIES_KEY].toString().split(",").each {
+            String s ->
+                SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(s)
+                list.add(simpleGrantedAuthority)
         }
         Collection<? extends GrantedAuthority> authorities = list
 

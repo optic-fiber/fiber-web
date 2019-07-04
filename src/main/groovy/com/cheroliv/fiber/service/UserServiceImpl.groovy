@@ -9,7 +9,7 @@ import com.cheroliv.fiber.repository.AuthorityRepository
 import com.cheroliv.fiber.repository.UserRepository
 import com.cheroliv.fiber.security.AuthoritiesConstants
 import com.cheroliv.fiber.security.SecurityUtils
-import com.cheroliv.fiber.security.UserDTO
+import com.cheroliv.fiber.dto.UserDTO
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
@@ -33,7 +33,7 @@ import java.util.stream.Collectors
 @CompileStatic
 @Service
 @Transactional
-class UserServiceSpring implements UserService {
+class UserServiceImpl implements UserService {
 
     final UserRepository userRepository
     final PasswordEncoder passwordEncoder
@@ -41,10 +41,10 @@ class UserServiceSpring implements UserService {
     final CacheManager cacheManager
 
     @Autowired
-    UserServiceSpring(UserRepository userRepository,
-                      PasswordEncoder passwordEncoder,
-                      AuthorityRepository authorityRepository,
-                      CacheManager cacheManager) {
+    UserServiceImpl(UserRepository userRepository,
+                    PasswordEncoder passwordEncoder,
+                    AuthorityRepository authorityRepository,
+                    CacheManager cacheManager) {
         this.userRepository = userRepository
         this.passwordEncoder = passwordEncoder
         this.authorityRepository = authorityRepository
@@ -61,7 +61,7 @@ class UserServiceSpring implements UserService {
                         // activate given user for the registration key.
                         user.activated = true
                         user.activationKey = null
-                        UserServiceSpring.this.clearUserCaches(user)
+                        UserServiceImpl.this.clearUserCaches(user)
                         log.debug("Activated user: {}", user)
                         user
                     }
@@ -83,7 +83,7 @@ class UserServiceSpring implements UserService {
                         user.password = passwordEncoder.encode(newPassword)
                         user.resetKey = null
                         user.resetDate = null
-                        UserServiceSpring.this.clearUserCaches(user)
+                        UserServiceImpl.this.clearUserCaches(user)
                         return user
                     }
                 })
@@ -102,7 +102,7 @@ class UserServiceSpring implements UserService {
                     User apply(User user) {
                         user.resetKey = SecurityUtils.generateResetKey()
                         user.resetDate = Instant.now()
-                        UserServiceSpring.this.clearUserCaches(user)
+                        UserServiceImpl.this.clearUserCaches(user)
                         return user
                     }
                 })
@@ -112,7 +112,7 @@ class UserServiceSpring implements UserService {
         userRepository.findOneByLogin(userDTO.login.toLowerCase()).ifPresent(new Consumer<User>() {
             @Override
             void accept(User existingUser) {
-                boolean removed = UserServiceSpring.this.removeNonActivatedUser(existingUser)
+                boolean removed = UserServiceImpl.this.removeNonActivatedUser(existingUser)
                 if (!removed) {
                     throw new LoginAlreadyUsedException()
                 }
@@ -121,7 +121,7 @@ class UserServiceSpring implements UserService {
         userRepository.findOneByEmailIgnoreCase(userDTO.email).ifPresent(new Consumer<User>() {
             @Override
             void accept(User existingUser) {
-                boolean removed = UserServiceSpring.this.removeNonActivatedUser(existingUser)
+                boolean removed = UserServiceImpl.this.removeNonActivatedUser(existingUser)
                 if (!removed) {
                     throw new EmailAlreadyUsedException()
                 }
@@ -213,7 +213,7 @@ class UserServiceSpring implements UserService {
                         user.setEmail(email.toLowerCase())
                         user.setLangKey(langKey)
                         user.setImageUrl(imageUrl)
-                        UserServiceSpring.this.clearUserCaches(user)
+                        UserServiceImpl.this.clearUserCaches(user)
                         log.debug("Changed Information for User: {}", user)
                     }
                 })
@@ -238,7 +238,7 @@ class UserServiceSpring implements UserService {
                 .map(new Function<User, User>() {
                     @Override
                     User apply(User user) {
-                        UserServiceSpring.this.clearUserCaches(user)
+                        UserServiceImpl.this.clearUserCaches(user)
                         user.setLogin(userDTO.getLogin().toLowerCase())
                         user.setFirstName(userDTO.getFirstName())
                         user.setLastName(userDTO.getLastName())
@@ -255,7 +255,7 @@ class UserServiceSpring implements UserService {
                                 managedAuthorities.add(authority)
                             }
                         }
-                        UserServiceSpring.this.clearUserCaches(user)
+                        UserServiceImpl.this.clearUserCaches(user)
                         log.debug("Changed Information for User: {}", user)
                         return user
                     }
@@ -273,7 +273,7 @@ class UserServiceSpring implements UserService {
             @Override
             void accept(User user) {
                 userRepository.delete(user)
-                UserServiceSpring.this.clearUserCaches(user)
+                UserServiceImpl.this.clearUserCaches(user)
                 log.debug("Deleted User: {}", user)
             }
         })
@@ -296,7 +296,7 @@ class UserServiceSpring implements UserService {
                         }
                         String encryptedPassword = passwordEncoder.encode(newPassword)
                         user.setPassword(encryptedPassword)
-                        UserServiceSpring.this.clearUserCaches(user)
+                        UserServiceImpl.this.clearUserCaches(user)
                         log.debug("Changed password for User: {}", user)
                     }
                 })
@@ -346,7 +346,7 @@ class UserServiceSpring implements UserService {
                     void accept(User user) {
                         log.debug("Deleting not activated user {}", user.getLogin())
                         userRepository.delete(user)
-                        UserServiceSpring.this.clearUserCaches(user)
+                        UserServiceImpl.this.clearUserCaches(user)
                     }
                 })
     }

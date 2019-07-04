@@ -1,4 +1,4 @@
-package com.cheroliv.fiber.security
+package com.cheroliv.fiber.dto
 
 import groovy.transform.CompileStatic
 

@@ -2,7 +2,7 @@ package com.cheroliv.fiber.service;
 
 import org.junit.jupiter.api.Test;
 
-class UserServiceSpringTest {
+class UserServiceImplTest {
 
     @Test
     void activateRegistration() {

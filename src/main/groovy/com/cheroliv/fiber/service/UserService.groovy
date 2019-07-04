@@ -1,7 +1,7 @@
 package com.cheroliv.fiber.service
 
 import com.cheroliv.fiber.domain.User
-import com.cheroliv.fiber.security.UserDTO
+import com.cheroliv.fiber.dto.UserDTO
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 

@@ -19,6 +19,6 @@ class JWTConfigurer extends SecurityConfigurerAdapter<DefaultSecurityFilterChain
     void configure(HttpSecurity http) throws Exception {
         http.addFilterBefore(
                 new JWTFilter(tokenProvider),
-                UsernamePasswordAuthenticationFilter.class)
+                UsernamePasswordAuthenticationFilter)
     }
 }

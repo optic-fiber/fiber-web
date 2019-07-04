@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service
 @Slf4j
 @CompileStatic
 @Service
-class PlanningServiceSpring implements PlanningService {
+class PlanningServiceImpl implements PlanningService {
     final PlanningRepository planningRepository
 
     @Autowired
-    PlanningServiceSpring(PlanningRepository planningRepository) {
+    PlanningServiceImpl(PlanningRepository planningRepository) {
         this.planningRepository = planningRepository
     }
 

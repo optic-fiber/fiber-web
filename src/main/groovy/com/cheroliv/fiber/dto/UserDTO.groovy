@@ -1,4 +1,4 @@
-package com.cheroliv.fiber.security
+package com.cheroliv.fiber.dto
 
 import com.cheroliv.fiber.domain.Authority
 import com.cheroliv.fiber.domain.User

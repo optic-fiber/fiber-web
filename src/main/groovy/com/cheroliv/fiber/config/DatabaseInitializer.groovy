@@ -7,7 +7,7 @@ import com.cheroliv.fiber.repository.AuthorityRepository
 import com.cheroliv.fiber.repository.PlanningRepository
 import com.cheroliv.fiber.repository.UserRepository
 import com.cheroliv.fiber.security.AuthoritiesConstants
-import com.cheroliv.fiber.security.UserDTO
+import com.cheroliv.fiber.dto.UserDTO
 import com.cheroliv.fiber.service.UserService
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
