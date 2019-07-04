@@ -35,9 +35,9 @@ out/*
 output/*
 bin/*
 .settings/*
-data/.~lock.*
+/data/.~lock.*
 local.properties
 _src/*
 /misc/*
 fiberwebKey.jks
-data/*
+/data/
