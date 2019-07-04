@@ -1,9 +1,10 @@
 package com.cheroliv.fiber.web.rest
 
-import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.GetMapping
 
-@Controller
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RestController
+
+@RestController
 class ClientForwardController {
 
     /**
@@ -12,6 +13,6 @@ class ClientForwardController {
      */
     @GetMapping(value = "/**/{path:^(?!websocket)[^\\.]*}")
     String forward() {
-        return "forward:/"
+        "forward:/"
     }
 }

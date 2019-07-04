@@ -10,10 +10,12 @@ import com.cheroliv.fiber.exceptions.LoginAlreadyUsedException
 import com.cheroliv.fiber.repository.UserRepository
 import com.cheroliv.fiber.security.SecurityUtils
 import com.cheroliv.fiber.service.MailService
+import com.cheroliv.fiber.service.MailServiceImpl
 import com.cheroliv.fiber.service.UserService
 import com.cheroliv.fiber.web.rest.vm.KeyAndPasswordVM
 import com.cheroliv.fiber.web.rest.vm.ManagedUserVM
 import groovy.transform.CompileStatic
+import groovy.transform.TypeCheckingMode
 import groovy.util.logging.Slf4j
 import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
@@ -32,11 +34,6 @@ import java.util.function.Supplier
 @CompileStatic
 class AccountResource {
 
-    static class AccountResourceException extends RuntimeException {
-        private AccountResourceException(String message) {
-            super(message)
-        }
-    }
 
     final UserRepository userRepository
     final UserService userService
@@ -46,7 +43,7 @@ class AccountResource {
     AccountResource(
             UserRepository userRepository,
             UserService userService,
-            MailService mailService) {
+            MailServiceImpl mailService) {
         this.userRepository = userRepository
         this.userService = userService
         this.mailService = mailService
@@ -103,22 +100,28 @@ class AccountResource {
      * @throws RuntimeException{@code 500 (Internal Server Error)} if the user couldn't be returned.
      */
     @GetMapping("/account")
+    @CompileStatic(TypeCheckingMode.SKIP)
     UserDTO getAccount() {
-        return userService.userWithAuthorities
+        userService.userWithAuthorities
                 .map(new Function<User, UserDTO>() {
                     @Override
                     UserDTO apply(User user) {
-                        return new UserDTO(user)
+                        new UserDTO(user)
                     }
                 })
                 .orElseThrow(new Supplier<AccountResourceException>() {
                     @Override
                     AccountResourceException get() {
-                        return new AccountResourceException("User could not be found")
+                        new AccountResourceException("User could not be found")
                     }
                 })
     }
 
+    static class AccountResourceException extends RuntimeException {
+        private AccountResourceException(String message) {
+            super(message)
+        }
+    }
     /**
      * {@code POST  /account} : update the current user information.
      *
@@ -127,6 +130,7 @@ class AccountResource {
      * @throws RuntimeException{@code 500 (Internal Server Error)} if the user login wasn't found.
      */
     @PostMapping("/account")
+    @CompileStatic(TypeCheckingMode.SKIP)
     void saveAccount(@Valid @RequestBody UserDTO userDTO) {
         String userLogin = SecurityUtils.currentUserLogin.orElseThrow(new Supplier<AccountResourceException>() {
             @Override

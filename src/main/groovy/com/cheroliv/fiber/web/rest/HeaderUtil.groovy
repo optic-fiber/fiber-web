@@ -9,10 +9,10 @@ import org.springframework.http.HttpHeaders
  */
 final class HeaderUtil {
 
-    private static final Logger log = LoggerFactory.getLogger(HeaderUtil.class)
+     static final Logger log = LoggerFactory.getLogger(HeaderUtil.class)
 
-    private HeaderUtil() {
-    }
+//     HeaderUtil() {
+//    }
 
     /**
      * <p>createAlert.</p>

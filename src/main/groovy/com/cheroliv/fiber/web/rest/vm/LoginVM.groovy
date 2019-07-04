@@ -10,13 +10,13 @@ class LoginVM {
 
     @NotNull
     @Size(min = 1, max = 50)
-     String username
+    String username
 
     @NotNull
     @Size(min = 4, max = 100)
-     String password
+    String password
 
-     Boolean rememberMe
+    Boolean rememberMe
 
     @Override
     String toString() {

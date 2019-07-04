@@ -6,7 +6,7 @@ import com.cheroliv.fiber.exceptions.BadRequestAlertException
 import com.cheroliv.fiber.exceptions.EmailAlreadyUsedException
 import com.cheroliv.fiber.exceptions.LoginAlreadyUsedException
 import com.cheroliv.fiber.repository.UserRepository
-import com.cheroliv.fiber.service.MailService
+import com.cheroliv.fiber.service.MailServiceImpl
 import com.cheroliv.fiber.service.UserService
 import groovy.transform.CompileStatic
 import groovy.transform.TypeCheckingMode
@@ -64,13 +64,13 @@ class UserResource {
 
     final UserRepository userRepository
 
-    final MailService mailService
+    final MailServiceImpl mailService
 
     @Autowired
     UserResource(
             UserService userService,
             UserRepository userRepository,
-            MailService mailService) {
+            MailServiceImpl mailService) {
         this.userService = userService
         this.userRepository = userRepository
         this.mailService = mailService
