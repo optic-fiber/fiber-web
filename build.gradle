@@ -70,12 +70,12 @@ dependencies {
         exclude group: "org.apache.tomcat.embed"
     }
     
-    //GROOVY TEMPLATE ENGINE
-    implementation ("org.springframework.boot:spring-boot-starter-groovy-templates:$spring_boot_version") {
-        exclude module: "spring-boot-starter-tomcat"
-        exclude group: "org.apache.tomcat.embed"
-    }
-    
+    //MAIL
+    implementation "org.springframework.boot:spring-boot-starter-mail:$spring_boot_version"
+    //THYMELEAF TEMPLATE ENGINE
+    implementation "org.springframework.boot:spring-boot-starter-thymeleaf:$spring_boot_version"
+
+
     //JPA HIBERNATE SPRING DATA
     implementation "org.springframework.boot:spring-boot-starter-data-jpa:$spring_boot_version"
     implementation ("org.springframework.boot:spring-boot-starter-data-rest:$spring_boot_version") {
@@ -84,6 +84,7 @@ dependencies {
     }
 
     //SPRING SECURITY
+    implementation "org.springframework.boot:spring-boot-starter-security:$spring_boot_version"
     implementation "org.springframework.security:spring-security-web:$spring_security_version"
     implementation "org.springframework.security:spring-security-config:$spring_security_version"
     implementation ("org.springframework.security:spring-security-data:$spring_security_version") {
@@ -150,14 +151,10 @@ dependencies {
         exclude group: "org.apache.tomcat.embed"
     }
 
-    testImplementation "org.springframework.security:spring-security-test:${spring_security_version}"
+//    testImplementation "org.springframework.security:spring-security-test:${spring_security_version}"
     testImplementation "org.springframework.boot:spring-boot-test:${spring_boot_version}"
     testImplementation "com.xlson.groovycsv:groovycsv:${groovy_csv_version}"
     
-    //MAIL
-    implementation "org.springframework.boot:spring-boot-starter-mail:$spring_boot_version"
-    //THYMELEAF TEMPLATE ENGINE
-    implementation "org.springframework.boot:spring-boot-starter-thymeleaf:$spring_boot_version"
 //    implementation "org.springframework.boot:spring-boot-starter-quartz:$spring_boot_version"
 //    implementation "org.springframework.boot:spring-boot-starter-webflux"
 //    implementation "org.springframework.boot:spring-boot-starter-websocket"
