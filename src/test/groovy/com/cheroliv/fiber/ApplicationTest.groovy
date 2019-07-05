@@ -48,11 +48,11 @@ class ApplicationTest {
         assert validator.class.name == LocalValidatorFactoryBean.class.name
     }
 
-    @Test
-    @Order(3)
-    @DisplayName("Test Spring context contains SecurityProblemSupport")
-    void testContextContainsSecurityProblemSupport() {
-        assert SecurityProblemSupport.class.name ==
-                context.getBean(SecurityProblemSupport.class).class.name
-    }
+//    @Test
+//    @Order(3)
+//    @DisplayName("Test Spring context contains SecurityProblemSupport")
+//    void testContextContainsSecurityProblemSupport() {
+//        assert SecurityProblemSupport.class.name ==
+//                context.getBean(SecurityProblemSupport.class).class.name
+//    }
 }

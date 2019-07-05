@@ -1,6 +1,5 @@
 package com.cheroliv.fiber.security
 
-import com.cheroliv.fiber.config.FiberProperties
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import io.jsonwebtoken.*
@@ -29,7 +28,6 @@ class TokenProvider implements InitializingBean {
     Key key
     long tokenValidityInMilliseconds
     long tokenValidityInMillisecondsForRememberMe
-    FiberProperties properties = FiberProperties.instance
 
     @Autowired
     TokenProvider(@Value('${fiber.security.authentication.jwt.base64-secret}')
@@ -40,7 +38,7 @@ class TokenProvider implements InitializingBean {
     @Override
     void afterPropertiesSet() throws Exception {
         byte[] keyBytes
-        String secret = properties.security.authentication.jwt.secret
+        String secret = null
         if (!StringUtils.isEmpty(secret)) {
             keyBytes = secret?.getBytes(StandardCharsets.UTF_8)
         } else {
@@ -50,9 +48,9 @@ class TokenProvider implements InitializingBean {
         }
         this.key = Keys.hmacShaKeyFor(keyBytes)
         this.tokenValidityInMilliseconds =
-                1000 * properties.security.authentication.jwt.tokenValidityInSeconds
+                1000 * 1800
         this.tokenValidityInMillisecondsForRememberMe =
-                1000 * properties.security.authentication.jwt.tokenValidityInSecondsForRememberMe
+                1000 * 2592000
     }
 
     String createToken(Authentication authentication, boolean rememberMe) {

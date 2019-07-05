@@ -1,0 +1,40 @@
+[{
+  "id": 2,
+  "initialTech": "uu",
+  "open": true,
+  "dateTimeCreation": "2019-06-25T20:48:59.187+02:00",
+  "lastNameTech": "user",
+  "firstNameTech": "user",
+  "user": {
+    "id": 2,
+    "login": "user",
+    "firstName": "user",
+    "lastName": "user",
+    "email": "user@localhost",
+    "activated": true,
+    "langKey": null,
+    "imageUrl": null,
+    "resetDate": null
+  }
+}
+,
+
+{
+  "id": 2,
+  "initialTech": "uu",
+  "open": true,
+  "dateTimeCreation": "2019-06-25T20:48:59.187+02:00",
+  "lastNameTech": "user",
+  "firstNameTech": "user",
+  "user": {
+    "id": 2,
+    "login": "user",
+    "firstName": "user",
+    "lastName": "user",
+    "email": "user@localhost",
+    "activated": true,
+    "langKey": null,
+    "imageUrl": null,
+    "resetDate": null
+  }
+}]

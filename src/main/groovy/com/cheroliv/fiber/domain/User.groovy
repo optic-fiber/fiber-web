@@ -148,4 +148,7 @@ class User implements Serializable {
         result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0)
         return result
     }
+
+
+
 }

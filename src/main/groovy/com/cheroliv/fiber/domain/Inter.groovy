@@ -22,7 +22,7 @@ import java.time.ZonedDateTime
         @Index(name = "`idx_inter_date_time_inter`", columnList = "`date_time_inter`"),
         @Index(name = "`idx_inter_first_name_client`", columnList = "`first_name_client`"),
         @Index(name = "`idx_inter_last_name_client`", columnList = "`last_name_client`")])
-class Inter implements Serializable {
+class Inter implements Serializable{
     static final long serialVersionUID = 1L
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE,
@@ -86,4 +86,6 @@ class Inter implements Serializable {
         result = 31 * result + (lastNameClient != null ? lastNameClient.hashCode() : 0)
         return result
     }
+
+
 }

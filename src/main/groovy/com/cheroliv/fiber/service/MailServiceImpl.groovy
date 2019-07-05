@@ -1,10 +1,10 @@
 package com.cheroliv.fiber.service
 
-import com.cheroliv.fiber.config.FiberProperties
 import com.cheroliv.fiber.domain.User
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.MessageSource
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.MimeMessageHelper
@@ -21,16 +21,18 @@ import java.nio.charset.StandardCharsets
 @Service
 @CompileStatic
 class MailServiceImpl implements MailService {
-
-
-
-    final FiberProperties jHipsterProperties = FiberProperties.instance
+    final String from
+    final String baseUrl
     final JavaMailSender javaMailSender
     final MessageSource messageSource
     final SpringTemplateEngine templateEngine
 
     @Autowired
     MailServiceImpl(
+            @Value('${fiber.mail.from}')
+                    String from,
+            @Value('${fiber.mail.base-url}')
+                    String baseUrl,
             JavaMailSender javaMailSender,
             MessageSource messageSource,
             SpringTemplateEngine templateEngine) {
@@ -49,7 +51,7 @@ class MailServiceImpl implements MailService {
         try {
             MimeMessageHelper message = new MimeMessageHelper(mimeMessage, isMultipart, StandardCharsets.UTF_8.name())
             message.setTo(to)
-            message.setFrom(jHipsterProperties.getMail().getFrom())
+            message.setFrom(this.from)
             message.setSubject(subject)
             message.setText(content, isHtml)
             javaMailSender.send(mimeMessage)
@@ -68,7 +70,7 @@ class MailServiceImpl implements MailService {
         Locale locale = Locale.forLanguageTag(user.getLangKey())
         Context context = new Context(locale)
         context.setVariable(USER, user)
-        context.setVariable(BASE_URL, jHipsterProperties.getMail().getBaseUrl())
+        context.setVariable(BASE_URL, this.baseUrl)
         String content = templateEngine.process(templateName, context)
         String subject = messageSource.getMessage(titleKey, null, locale)
         sendEmail(user.getEmail(), subject, content, false, true)
