@@ -22,7 +22,8 @@ plugins {
     id "org.openapi.generator" version "4.0.2"
 }
 apply plugin: "propdeps"
-
+import static org.gradle.api.JavaVersion.VERSION_12
+sourceCompatibility = VERSION_12
 repositories {
     mavenCentral()
     jcenter()
