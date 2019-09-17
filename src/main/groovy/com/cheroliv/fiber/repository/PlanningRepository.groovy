@@ -14,4 +14,7 @@ import org.springframework.stereotype.Repository
 interface PlanningRepository extends PagingAndSortingRepository<Planning, Long> {
     @Query("from Planning p where p.user.login=:login")
     Slice<Planning> findByUserLogin(@Param("login")String login, Pageable pageable)
+
+    @Query("from Planning p where p.user.login=:login and u.planning.open=true")
+    Optional<Planning> findByUserLoginAndOpen(String login)
 }
