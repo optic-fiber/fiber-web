@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Slf4j
-@CompileStatic
 @Service
+@CompileStatic
 class InterServiceImpl implements InterService {
 
     final InterRepository interRepository
