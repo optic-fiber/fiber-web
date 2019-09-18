@@ -8,57 +8,10 @@
 </head>
 <body>
 <div class="jumbotron">
-    <h1 class="display-5">Technicien Fibre Optique</h1>
-    <form>
-        <fieldset>
-            <div class="form-group">
-                <label for="inputLoginOrEmail">Utilisateur/Email</label>
-                <input aria-describedby="emailHelp"
-                       class="form-control"
-                       id="inputLoginOrEmail"
-                       placeholder="Entrer utilisateur/email"
-                       type="email">
-                <small class="form-text text-muted"
-                       id="emailHelp"></small>
-            </div>
-            <div class="form-group">
-                <label for="inputPassword">Mot De Passe</label>
-                <input class="form-control"
-                       id="inputPassword"
-                       placeholder="mot de passe"
-                       type="password">
-            </div>
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-8">
-                        <ul class="list-unstyled list-text space-mts space-mbn">
-                            <li>
-                                <a class="link"
-                                   role="link"
-                                   target="_blank"
-                                   tabindex="5"
-                                   rel=""
-                                   title="Réinitialisez votre mot de mot de passe">Mot de passe oublié ?</a></li>
-                            <li>
-                                <a class="link"
-                                   rel=""
-                                   role="link"
-                                   tabindex="5"
-                                   target="_blank"
-                                   title="Créer votre compte">Créer votre compte</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-sm-4 text-right" >
-                        <button class="btn btn-primary"
-                                type="submit">Connexion
-                        </button>
+    <h3 class="d-flex p-2 bd-highlight">Technicien Fibre Optique</h3>
+    <th:block th:include="login"/>
 
-                    </div>
-                </div>
-            </div>
-        </fieldset>
-    </form>
 </div>
-<th:block th:include="layout/footer"></th:block>
+<th:block th:include="layout/footer"/>
 </body>
 </html>

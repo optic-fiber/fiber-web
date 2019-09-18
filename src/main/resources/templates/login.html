@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
-      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
-<head>
-    <title>Spring Security Example </title>
-</head>
-<body>
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:th="https://www.thymeleaf.org"
+     xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+     th:fragment="login">
+
 <div th:if="${param.error}">
     Invalid username and password.
 </div>
@@ -12,9 +10,52 @@
     You have been logged out.
 </div>
 <form th:action="@{/login}" method="post">
-    <div><label> User Name : <input type="text" name="username"/> </label></div>
-    <div><label> Password: <input type="password" name="password"/> </label></div>
-    <div><input type="submit" value="Sign In"/></div>
+    <fieldset class="d-inline-flex p-2 bd-highlight">
+        <div class="form-group">
+            <label for="inputLoginOrEmail">Utilisateur/Email</label>
+            <input aria-describedby="emailHelp"
+                   class="form-control"
+                   id="inputLoginOrEmail"
+                   placeholder="Entrer utilisateur/email"
+                   type="email"
+                   name="username">
+            <small class="form-text text-muted"
+                   id="emailHelp"></small>
+        </div>
+        <div class="form-group">
+            <label for="inputPassword">Mot De Passe</label>
+            <input class="form-control"
+                   id="inputPassword"
+                   placeholder="mot de passe"
+                   type="password"
+                   name="password">
+        </div>
+        <div class="container">
+            <div class="row d-flex p-2 bd-highlight">
+                <ul class="list-unstyled list-text space-mts space-mbn align-content-start">
+                    <li>
+                        <a class="link"
+                           role="link"
+                           target="_blank"
+                           tabindex="5"
+                           rel=""
+                           title="Réinitialisez votre mot de mot de passe">Mot de passe oublié ?</a></li>
+                    <li>
+                        <a class="link"
+                           rel=""
+                           role="link"
+                           tabindex="5"
+                           target="_blank"
+                           title="Créer votre compte">Créer votre compte</a></li>
+                </ul>
+                <div class="col-sm-4 align-content-end" >
+                    <button class="btn btn-primary"
+                            type="submit">Connexion
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </fieldset>
 </form>
-</body>
-</html>
+</div>
