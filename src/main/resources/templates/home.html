@@ -1,20 +1,60 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" 
-xmlns:th="https://www.thymeleaf.org" 
-xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org"
+>
 <head>
     <th:block th:include="layout/header"></th:block>
     <title>Fiber Tech Web</title>
 </head>
 <body>
 <div class="jumbotron">
-   <h1 class="display-3">Hello, world!</h1>
-   <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
-    <hr class="my-4">
-    <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
-    <p class="lead">
-        <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
-    </p>
+    <h1 class="display-3">Technicien Fibre Optique</h1>
+    <form>
+        <fieldset>
+            <legend>Legend</legend>
+            <div class="form-group">
+                <label for="inputLoginOrEmail">Email address</label>
+                <input aria-describedby="emailHelp"
+                       class="form-control"
+                       id="inputLoginOrEmail"
+                       placeholder="Enter email"
+                       type="email">
+                <small class="form-text text-muted"
+                       id="emailHelp">Je ne partage pas votre mail.</small>
+            </div>
+            <div class="form-group">
+                <label for="inputPassword">Password</label>
+                <input class="form-control"
+                       id="inputPassword"
+                       placeholder="Password"
+                       type="password">
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <ul class="list-unstyled list-text space-mts space-mbn">
+                            <li>
+                                <a class="link"
+                                   title="Réinitialisez votre mot de mot de passe">Mot de passe oublié ?</a></li>
+                            <li>
+                                <a class="link"
+                                   rel=""
+                                   role="link"
+                                   tabindex="5"
+                                   target="_blank"
+                                   title="Créer votre boîte mail gratuite">Créer votre boîte mail</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-4">
+                        <button class="btn btn-primary"
+                                type="submit">Submit
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </form>
 </div>
 <th:block th:include="layout/footer"></th:block>
 </body>
