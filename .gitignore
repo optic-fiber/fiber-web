@@ -28,6 +28,7 @@ nbdist/
 
 ### VS Code ###
 .vscode/
+*.code-workspace
 
 
 

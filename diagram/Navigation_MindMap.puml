@@ -1,0 +1,12 @@
+@startmindmap
++ Home
+-- Unauthorized
+--- LoginForm
+---- Authorized
+--- Suscribe
+---- Send Confirm Mail\t
+----- LoginForm
+++ Authorized
++++ InterList
++++ Recap
+@endmindmap
